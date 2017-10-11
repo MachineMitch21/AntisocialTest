@@ -18,5 +18,5 @@ target_link_libraries(${PROJECT_NAME} antisocial)
 endif (UNIX)
 
 if (WIN32)
-target_link_libraries(${PROJECT_NAME} antisocial)
+target_link_libraries(${PROJECT_NAME} antisocial glew32 glfw3)
 endif (WIN32)
