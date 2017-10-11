@@ -5,6 +5,9 @@ using antisocial::Window;
 
 int main(int argv, char** argc)
 {
+    HINSTANCE hinstDLL;
+
+    hinstDLL = LoadLibrary("antisocial.dll")
     Window w("Hello, Antisocial", 800, 600);
 
     while(!w.IsClosed())
