@@ -10,7 +10,6 @@ file(GLOB SOURCES src/*.cpp src/*.c src/.cc src/*.h src/*.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-add_definitions()
 include_directories(${PROJECT_SOURCE_DIR}/external)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
