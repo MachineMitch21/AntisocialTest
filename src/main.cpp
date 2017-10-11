@@ -20,6 +20,11 @@ int main(int argv, char** argc)
             std::cout << "Clicked left mouse button" << std::endl;
         }
 
+        if (Input::keyPressed(KeyCode::K_ESCAPE))
+        {
+            break;
+        }
+
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
         w.update();
