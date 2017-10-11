@@ -6,7 +6,7 @@ SET(VERSION_MINOR "0")
 SET(VERSION_PATCH "1")
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
-file(GLOB SOURCES src/*.cpp src/*.c src/.cc src/*.h src/*.hpp);
+file(GLOB SOURCES src/*.cpp src/*.c src/.cc src/*.h src/*.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
