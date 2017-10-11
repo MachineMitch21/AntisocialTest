@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
-project(antisocial)
+project(antisocial_test)
 SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "0")
 SET(VERSION_PATCH "1")
@@ -10,7 +10,7 @@ file(GLOB SOURCES src/*.cpp src/*.c src/.cc src/*.h src/*.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-add_definitions(-DANTISOCIAL_EXPORT -DGLEW_STATIC -DGLEW_NO_GLU)
+add_definitions()
 include_directories(${PROJECT_SOURCE_DIR}/external)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
