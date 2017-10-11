@@ -1,5 +1,7 @@
 #include <AntisocialDLL.h>
+#include <Windows.h>
 #include <Window.h>
+#include <fstream>
 
 using antisocial::Window;
 
@@ -19,6 +21,17 @@ int main(int argv, char** argc)
 
             w.update();
         }
+    }
+    else
+    {
+        std::ofstream logFile("antisocialLog.txt");
+
+        if (logFile.is_open())
+        {
+            logFile << "Did not load dll\n";
+        }
+
+        logFile.close();
     }
     return 0;
 }
