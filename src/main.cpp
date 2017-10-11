@@ -7,14 +7,18 @@ int main(int argv, char** argc)
 {
     HINSTANCE hinstDLL;
 
-    hinstDLL = LoadLibrary("antisocial.dll")
-    Window w("Hello, Antisocial", 800, 600);
+    hinstDLL = LoadLibrary("libantisocial.dll");
 
-    while(!w.IsClosed())
+    if (hinstDLL != NULL)
     {
-        w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+        Window w("Hello, Antisocial", 800, 600);
 
-        w.update();
+        while(!w.IsClosed())
+        {
+            w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+
+            w.update();
+        }
     }
     return 0;
 }
