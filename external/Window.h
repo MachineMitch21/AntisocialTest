@@ -25,6 +25,7 @@ namespace antisocial {
 		int getHeight();
 		void setCursor(bool show);
 		void setIcon(const std::string path);
+		GLFWwindow* getContext() const { return _window; };
 
 		bool isCursorActive();
 		bool isMinimized();

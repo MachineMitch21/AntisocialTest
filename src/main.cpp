@@ -12,7 +12,8 @@ using namespace antisocial::input;
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 800, 600);
-    Input i;
+
+    Input::updateContext(w.getContext());
 
     while(!w.IsClosed())
     {
