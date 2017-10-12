@@ -4,6 +4,7 @@
 #include <Input.h>
 #include <fstream>
 #include <iostream>
+#include <GL/glew.h>
 
 using antisocial::Window;
 using namespace antisocial::input;
@@ -26,6 +27,8 @@ int main(int argv, char** argc)
         }
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+
+        //** RENDER!! **//
 
         w.update();
     }

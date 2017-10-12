@@ -3,7 +3,7 @@ cd "./build"
 @echo on
 
 cmake -G "MinGW Makefiles" ..
-mingw32-make
+"C:/MinGW/bin/mingw32-make.exe"
 
 @echo off
 cd "../"

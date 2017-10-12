@@ -145,14 +145,10 @@ namespace antisocial
             static bool keyPressed(KeyCode key);
             static bool keyUp(KeyCode key);
             static bool getKey(KeyCode key);
-
             static bool mouseButtonDown(MouseButton button);
             static bool mouseButtonPressed(MouseButton button);
             static bool mouseButtonUp(MouseButton button);
-
-
             static glm::vec2 getCurrentCursorPos();
-
             static void updateContext(GLFWwindow* window);
 
         public:
