@@ -1,6 +1,7 @@
 #include <AntisocialDLL.h>
 #include <Windows.h>
 #include <Window.h>
+#include <Shader.h>
 #include <Input.h>
 #include <fstream>
 #include <iostream>
@@ -9,11 +10,14 @@
 
 using antisocial::Window;
 using namespace antisocial::input;
+using antisocial::Shader;
 
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 800, 600);
     Input::updateContext(w.getContext());
+
+    Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
 
     std::vector<float> vertices =
     {
@@ -35,6 +39,8 @@ int main(int argv, char** argc)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(0));
 
+    shader.bind();
+
     while(!w.IsClosed())
     {
         if (Input::mouseButtonDown(MouseButton::M_LEFT))
@@ -53,5 +59,8 @@ int main(int argv, char** argc)
 
         w.update();
     }
+
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
     return 0;
 }
