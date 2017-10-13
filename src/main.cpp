@@ -23,8 +23,11 @@ int main(int argv, char** argc)
     std::vector<float> vertices =
     {
         -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-         0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f,
+         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
     };
 
     GLuint vao, vbo;
@@ -45,6 +48,8 @@ int main(int argv, char** argc)
 
     shader.bind();
 
+    bool drawWireframe = false;
+
     while(!w.IsClosed())
     {
         if (Input::mouseButtonDown(MouseButton::M_LEFT))
@@ -57,11 +62,18 @@ int main(int argv, char** argc)
             break;
         }
 
+        if (Input::keyDown(KeyCode::V))
+        {
+            drawWireframe = !drawWireframe;
+
+            glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
+        }
+
         shader.setFloat("time", glfwGetTime());
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         w.update();
     }
