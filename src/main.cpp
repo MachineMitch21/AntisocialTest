@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <vector>
 
 using antisocial::Window;
@@ -21,9 +22,9 @@ int main(int argv, char** argc)
 
     std::vector<float> vertices =
     {
-        -0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+         0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
     };
 
     GLuint vao, vbo;
@@ -37,7 +38,10 @@ int main(int argv, char** argc)
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
     shader.bind();
 
@@ -52,6 +56,8 @@ int main(int argv, char** argc)
         {
             break;
         }
+
+        shader.setFloat("time", glfwGetTime());
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
