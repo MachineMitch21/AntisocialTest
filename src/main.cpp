@@ -50,6 +50,8 @@ int main(int argv, char** argc)
 
     bool drawWireframe = false;
 
+    bool drawPoints = false;
+
     while(!w.IsClosed())
     {
         if (Input::mouseButtonDown(MouseButton::M_LEFT))
@@ -65,8 +67,15 @@ int main(int argv, char** argc)
         if (Input::keyDown(KeyCode::V))
         {
             drawWireframe = !drawWireframe;
-
+            drawPoints = false;
             glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
+        }
+
+        if (Input::keyDown(KeyCode::P))
+        {
+            drawPoints = !drawPoints;
+            drawWireframe = false;
+            glPolygonMode(GL_FRONT_AND_BACK, (drawPoints ? GL_POINT : GL_FILL));
         }
 
         shader.setFloat("time", glfwGetTime());
