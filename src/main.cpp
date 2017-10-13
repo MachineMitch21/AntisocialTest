@@ -15,7 +15,7 @@ using antisocial::Shader;
 
 int main(int argv, char** argc)
 {
-    Window w("Hello, Antisocial", 800, 600);
+    Window w("Hello, Antisocial", 1000, 750);
     Input::updateContext(w.getContext());
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
@@ -37,7 +37,6 @@ int main(int argv, char** argc)
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -49,8 +48,8 @@ int main(int argv, char** argc)
     shader.bind();
 
     bool drawWireframe = false;
-
     bool drawPoints = false;
+    bool setFullScreen = false;
 
     while(!w.IsClosed())
     {
@@ -76,6 +75,12 @@ int main(int argv, char** argc)
             drawPoints = !drawPoints;
             drawWireframe = false;
             glPolygonMode(GL_FRONT_AND_BACK, (drawPoints ? GL_POINT : GL_FILL));
+        }
+
+        if (Input::keyDown(KeyCode::F11))
+        {
+            setFullScreen = !setFullScreen;
+            w.setFullScreen(setFullScreen);
         }
 
         shader.setFloat("time", glfwGetTime());

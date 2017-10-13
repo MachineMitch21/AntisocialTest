@@ -30,6 +30,7 @@ namespace antisocial {
 		void close();
 
 		void enableVSYNC(bool enable);
+		void setFullScreen(bool doSet);
 
 	private:
 		bool init();
@@ -46,6 +47,10 @@ namespace antisocial {
 		int _width;
 		bool _cursorActive;
 		bool _minimized;
+		bool _isFullScreen;
+
+		int _originalHeight;
+		int _originalWidth;
 	};
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);

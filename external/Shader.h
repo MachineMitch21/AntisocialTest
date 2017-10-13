@@ -10,7 +10,6 @@
 #include <map>
 #include <GL/glew.h>
 
-#define MAX_SHADERS 2
 #define ERR_LOG 512
 
 namespace antisocial {

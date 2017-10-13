@@ -61,20 +61,20 @@ namespace antisocial
             X               = GLFW_KEY_Y,
             Y               = GLFW_KEY_Y,
             Z               = GLFW_KEY_Z,
-            K_ESCAPE          = GLFW_KEY_ESCAPE,
-            K_ENTER           = GLFW_KEY_ENTER,
-            K_TAB             = GLFW_KEY_TAB,
-            K_BACKSPACE       = GLFW_KEY_BACKSPACE,
-            K_INSERT          = GLFW_KEY_INSERT,
-            K_DELETE          = GLFW_KEY_DELETE,
-            K_RIGHT           = GLFW_KEY_RIGHT,
-            K_LEFT            = GLFW_KEY_LEFT,
-            K_UP              = GLFW_KEY_UP,
-            K_DOWN            = GLFW_KEY_DOWN,
-            K_PAGE_UP         = GLFW_KEY_PAGE_UP,
-            K_PAGE_DOWN       = GLFW_KEY_PAGE_DOWN,
-            K_HOME            = GLFW_KEY_HOME,
-            K_END             = GLFW_KEY_END,
+            K_ESCAPE        = GLFW_KEY_ESCAPE,
+            K_ENTER         = GLFW_KEY_ENTER,
+            K_TAB           = GLFW_KEY_TAB,
+            K_BACKSPACE     = GLFW_KEY_BACKSPACE,
+            K_INSERT        = GLFW_KEY_INSERT,
+            K_DELETE        = GLFW_KEY_DELETE,
+            K_RIGHT         = GLFW_KEY_RIGHT,
+            K_LEFT          = GLFW_KEY_LEFT,
+            K_UP            = GLFW_KEY_UP,
+            K_DOWN          = GLFW_KEY_DOWN,
+            K_PAGE_UP       = GLFW_KEY_PAGE_UP,
+            K_PAGE_DOWN     = GLFW_KEY_PAGE_DOWN,
+            K_HOME          = GLFW_KEY_HOME,
+            K_END           = GLFW_KEY_END,
             F1              = GLFW_KEY_F1,
             F2              = GLFW_KEY_F2,
             F3              = GLFW_KEY_F3,
@@ -155,7 +155,6 @@ namespace antisocial
             static float LookSensitivity;
 
         private:
-
             static bool _keysPrevious[MAX_KEYS];
             static bool _buttonsPrevious[MAX_MOUSE_BUTTONS];
 
