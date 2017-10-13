@@ -19,8 +19,6 @@ namespace antisocial {
 		bool IsClosed();
 		void update();
 		void clear(float r, float g, float b, float a);
-		double getX();
-		double getY();
 		int getWidth();
 		int getHeight();
 		void setCursor(bool show);
@@ -35,7 +33,6 @@ namespace antisocial {
 
 	private:
 		bool init();
-		friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 		friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 		friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 		friend void window_iconify_callback(GLFWwindow* window, int iconified);
@@ -47,13 +44,10 @@ namespace antisocial {
 		std::string _title;
 		int _height;
 		int _width;
-		double _x, _y;
 		bool _cursorActive;
 		bool _minimized;
-
 	};
 
-	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	void window_iconify_callback(GLFWwindow* window, int iconified);
