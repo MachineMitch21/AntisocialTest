@@ -1,6 +1,7 @@
 #include <AntisocialDLL.h>
 #include <Window.h>
 #include <Shader.h>
+#include <Texture2D.h>
 #include <Input.h>
 #include <fstream>
 #include <iostream>
@@ -11,6 +12,7 @@
 using antisocial::Window;
 using namespace antisocial::input;
 using antisocial::Shader;
+using antisocial::Texture2D;
 
 int main(int argv, char** argc)
 {
@@ -18,15 +20,17 @@ int main(int argv, char** argc)
     Input::updateContext(w.getContext());
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
+    Texture2D bricks("../Data/Images/lightBricks.png");
+    Texture2D scarJ("../Data/Images/scarlettjo.png");
 
     std::vector<float> vertices =
     {
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f,
-         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
+         0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f
     };
 
     GLuint vao, vbo;
@@ -39,12 +43,18 @@ int main(int argv, char** argc)
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0));
 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     shader.bind();
+    shader.setInteger("tex", 0);
+    shader.setInteger("tex2", 1);
+
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -86,6 +96,8 @@ int main(int argv, char** argc)
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
+        scarJ.bind(1);
+        bricks.bind(0);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         w.update();

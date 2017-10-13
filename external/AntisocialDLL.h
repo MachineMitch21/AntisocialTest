@@ -3,7 +3,7 @@
 #define ANTISOCIAL_H
 
 #ifdef __WIN32__
-#include <Windows.h>
+#include <windows.h>
 #include <fstream>
 
 BOOL APIENTRY DLLMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved);
@@ -15,7 +15,7 @@ BOOL APIENTRY DLLMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 #endif // ANTISOCIAL_EXPORT
 #endif // __WIN32__
 
-#ifdef __LINUX__
+#ifdef __linux__
 #define ANTISOCIAL_API
 #endif // __LINUX__
 
