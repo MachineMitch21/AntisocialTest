@@ -14,7 +14,11 @@
 
 namespace antisocial {
 
-	class ANTISOCIAL_API Shader
+	class
+	#ifdef __WIN32__
+	ANTISOCIAL_API
+	#endif // __WIN32__
+	Shader
 	{
 	public:
 		Shader();

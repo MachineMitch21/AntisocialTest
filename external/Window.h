@@ -10,7 +10,11 @@
 
 namespace antisocial {
 
-	class ANTISOCIAL_API Window
+	class
+	#ifdef __WIN32__
+	ANTISOCIAL_API
+	#endif // __WIN32__
+	Window
 	{
 	public:
 		Window(const std::string title, int width, int height);
@@ -31,6 +35,7 @@ namespace antisocial {
 
 		void enableVSYNC(bool enable);
 		void setFullScreen(bool doSet);
+		void setResizable(bool resizable);
 
 	private:
 		bool init();

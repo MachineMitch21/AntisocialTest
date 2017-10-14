@@ -134,7 +134,11 @@ namespace antisocial
             M_MIDDLE  = GLFW_MOUSE_BUTTON_3,
         };
 
-        class ANTISOCIAL_API Input
+        class
+        #ifdef __WIN32__
+        ANTISOCIAL_API
+        #endif // __WIN32__
+        Input
         {
 
         public:
