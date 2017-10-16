@@ -93,7 +93,7 @@ int main(int argv, char** argc)
             w.setFullScreen(setFullScreen);
         }
 
-        shader.setFloat("time", glfwGetTime());
+        shader.setFloat("time", Time::ElapsedTime());
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -102,9 +102,6 @@ int main(int argv, char** argc)
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         w.update();
-
-        std::cout << "Elapsed Time:     " << Time::ElapsedTime() << std::endl;
-        std::cout << "Delta Time:       " << Time::DeltaTime() << std::endl;
     }
 
     glDeleteVertexArrays(1, &vao);

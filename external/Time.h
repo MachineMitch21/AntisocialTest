@@ -17,6 +17,7 @@ namespace antisocial
     public:
         static float ElapsedTime();
         static float DeltaTime();
+        static float LastFrame();
 
     private:
         static float _elapsedTime;

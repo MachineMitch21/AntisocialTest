@@ -7,12 +7,14 @@ out vec3 FragPos;
 out vec4 FragColor;
 out vec2 texCoord;
 
+uniform float time;
 
 void main()
 {
-
     FragPos = Pos;
     FragColor = vec4(Color, 1.0f);
+    FragColor.x += sin(time);
+    FragColor.y -= sin(time);
     texCoord = TexCoord;
     gl_Position = vec4(FragPos, 1.0f);
 }
