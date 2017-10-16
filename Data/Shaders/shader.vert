@@ -9,12 +9,14 @@ out vec2 texCoord;
 
 uniform float time;
 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 void main()
 {
     FragPos = Pos;
     FragColor = vec4(Color, 1.0f);
-    FragColor.x += sin(time);
-    FragColor.y -= sin(time);
     texCoord = TexCoord;
-    gl_Position = vec4(FragPos, 1.0f);
+    gl_Position = vec4(FragPos, 1.0f) * model * view * projection;
 }

@@ -1,13 +1,14 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "AntisocialDLL.h"
-#include "Time.h"
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include <iostream>
+
+#include "AntisocialDLL.h"
+#include "Time.h"
+
 
 using antisocial::Time;
 

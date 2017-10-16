@@ -3,6 +3,8 @@
 
 #include "AntisocialDLL.h"
 
+#include <GLFW/glfw3.h>
+
 namespace antisocial
 {
 
@@ -23,6 +25,8 @@ namespace antisocial
         static float _elapsedTime;
         static float _deltaTime;
         static float _lastFrame;
+
+        static void update_time();
     };
 
 }
