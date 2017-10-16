@@ -3,6 +3,7 @@
 #include <Shader.h>
 #include <Texture2D.h>
 #include <Input.h>
+#include <Time.h>
 #include <fstream>
 #include <iostream>
 #include <GL/glew.h>
@@ -13,6 +14,7 @@ using antisocial::Window;
 using namespace antisocial::input;
 using antisocial::Shader;
 using antisocial::Texture2D;
+using antisocial::Time;
 
 int main(int argv, char** argc)
 {
@@ -54,7 +56,6 @@ int main(int argv, char** argc)
     shader.bind();
     shader.setInteger("tex", 0);
     shader.setInteger("tex2", 1);
-
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -101,6 +102,9 @@ int main(int argv, char** argc)
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         w.update();
+
+        std::cout << "Elapsed Time:     " << Time::ElapsedTime() << std::endl;
+        std::cout << "Delta Time:       " << Time::DeltaTime() << std::endl;
     }
 
     glDeleteVertexArrays(1, &vao);

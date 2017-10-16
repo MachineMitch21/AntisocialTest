@@ -2,11 +2,14 @@
 #define WINDOW_H
 
 #include "AntisocialDLL.h"
+#include "Time.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include <iostream>
+
+using antisocial::Time;
 
 namespace antisocial {
 
