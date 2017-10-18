@@ -4,6 +4,7 @@
 #include <Texture2D.h>
 #include <Input.h>
 #include <Time.h>
+#include <Vector4f.h>
 
 #include <fstream>
 #include <iostream>
@@ -13,8 +14,9 @@
 #include <cmath>
 #include <vector>
 
-using antisocial::Window;
 using namespace antisocial::input;
+using namespace antisocial::math;
+using antisocial::Window;
 using antisocial::Shader;
 using antisocial::Texture2D;
 using antisocial::Time;
@@ -175,8 +177,6 @@ int main(int argv, char** argc)
             scarJ.bind(1);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-
-
         w.update();
     }
 
