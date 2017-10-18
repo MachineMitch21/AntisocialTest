@@ -5,8 +5,6 @@
 #include <Input.h>
 #include <Time.h>
 #include <Vector4f.h>
-
-#include <fstream>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -169,7 +167,7 @@ int main(int argv, char** argc)
             glm::mat4 model;
 
             model = glm::translate(model, positions[i]);
-            model = glm::rotate(model, Time::ElapsedTime() * i, glm::vec3(0.0f, 1.0f, 1.0f));
+            model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
 
             shader.setMatrix4("model", glm::value_ptr(model));
 
