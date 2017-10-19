@@ -5,6 +5,8 @@
 #include <Input.h>
 #include <Time.h>
 #include <Vector4f.h>
+#include <Mesh.h>
+#include <ModelLoader.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,11 +20,41 @@ using antisocial::Window;
 using antisocial::Shader;
 using antisocial::Texture2D;
 using antisocial::Time;
+using antisocial::Mesh;
+using antisocial::ModelLoader;
+
+void print_std_vector(std::string message, std::vector<glm::vec3> v)
+{
+    std::cout << message << std::endl;
+    for (int i = 0; i < v.size(); i++)
+    {
+        std::cout << v[i].x << ", " << v[i].y << ", " << v[i].z << std::endl;
+    }
+}
+
+void print_std_vector(std::string message, std::vector<glm::vec2> v)
+{
+    std::cout << message << std::endl;
+    for (int i = 0; i < v.size(); i++)
+    {
+        std::cout << v[i].x << ", " << v[i].y << std::endl;
+    }
+}
 
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 1000, 750);
     Input::updateContext(w.getContext());
+
+    std::vector<glm::vec3> objVertices;
+    std::vector<glm::vec3> objNormals;
+    std::vector<glm::vec2> objUVs;
+
+    ModelLoader::loadObj("../Data/Models/cube.obj", objVertices, objNormals, objUVs);
+
+    print_std_vector("printing vertices", objVertices);
+    print_std_vector("printing normals", objNormals);
+    print_std_vector("printing uvs", objUVs);
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Texture2D bricks("../Data/Images/lightBricks.png");
@@ -30,67 +62,50 @@ int main(int argv, char** argc)
 
     std::vector<float> vertices =
     {
-        -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-         1.0f, -1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-         1.0f, -1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-         1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f
+        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+         1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+         1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+         1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
+        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
+         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f
     };
 
-    GLuint vao, vbo;
-
-    glGenBuffers(1, &vbo);
-    glGenVertexArrays(1, &vao);
-
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(0));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+    Mesh objMesh(objVertices, objNormals, objUVs);
 
     glm::mat4 view;
     glm::mat4 projection;
+
+    GLuint vertexVBO, uvVBO;
 
     projection = glm::perspective(45.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
@@ -173,12 +188,9 @@ int main(int argv, char** argc)
 
             bricks.bind(0);
             scarJ.bind(1);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            objMesh.draw();
         }
         w.update();
     }
-
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
     return 0;
 }

@@ -1,11 +1,9 @@
 #version 330 core
 layout (location = 0) in vec3 Pos;
-layout (location = 1) in vec3 Color;
+layout (location = 1) in vec3 Normal;
 layout (location = 2) in vec2 TexCoord;
-layout (location = 3) in vec3 Normal;
 
 out vec3 FragPos;
-out vec4 FragColor;
 out vec2 texCoord;
 out vec3 normal;
 
@@ -21,7 +19,6 @@ void main()
     FragPos = Pos;
     FragPos += Normal * sin(time);
     normal = Normal * mat3(model_view);
-    FragColor = vec4(Color, 1.0f);
     texCoord = TexCoord;
     gl_Position = vec4(FragPos, 1.0f) * model_view * projection;
 }
