@@ -43,6 +43,9 @@ void print_std_vector(std::string message, std::vector<glm::vec2> v)
     }
 }
 
+
+void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
+
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 1000, 750);
@@ -115,6 +118,9 @@ int main(int argv, char** argc)
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
     float verticeOffset = 0.0f;
+
+    float lastTimeCount = 0.0f;
+    int nbFrames = 0;
 
     while(!w.IsClosed())
     {
@@ -293,6 +299,21 @@ int main(int argv, char** argc)
             }
         }
         w.update();
+        nbFrames++;
+        printFPSandMilliSeconds(nbFrames, lastTimeCount);
     }
     return 0;
+}
+
+
+void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount)
+{
+	if (Time::ElapsedTime() - lastTimeCount >= 1.0f)
+	{
+		std::cout << "Milliseconds: " << 1000.0f / nbFrames << std::endl;
+		std::cout << "Frames Per Second: " << nbFrames << std::endl;
+
+		nbFrames = 0;
+		lastTimeCount += 1.0f;
+	}
 }
