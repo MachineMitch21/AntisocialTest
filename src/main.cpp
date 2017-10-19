@@ -14,7 +14,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include <vector>
-#include <thread>
 
 using namespace antisocial::input;
 using namespace antisocial::math;
@@ -258,6 +257,9 @@ int main(int argv, char** argc)
 
             shader.setMatrix4("model", glm::value_ptr(model));
 
+            shader.setBool("usingUnit1", false);
+            shader.setBool("usingUnit2", false);
+
             if (i == 0)
             {
                 mutantDiffuse.bind(0);
@@ -270,6 +272,8 @@ int main(int argv, char** argc)
             }
             else if (i == 2)
             {
+                shader.setBool("usingUnit1", true);
+                shader.setBool("usingUnit2", true);
                 city1.bind(0);
                 city2.bind(1);
                 city3.bind(2);

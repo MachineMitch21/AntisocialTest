@@ -19,6 +19,9 @@ namespace antisocial {
 		Texture2D(const std::string& texturePath);
 		~Texture2D();
 
+		//Disable a texture unit to prevent erroneous texture application on the wrong models
+		static void unbind(unsigned int unit);
+
 		void bind(unsigned int unit);
 		void setImage(const std::string& path, unsigned int unit);
 		inline GLuint getHandle() const { return _handle; };
