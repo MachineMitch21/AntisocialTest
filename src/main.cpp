@@ -118,7 +118,6 @@ int main(int argv, char** argc)
     shader.bind();
     shader.setInteger("tex", 0);
     // shader.setInteger("tex2", 1);
-    shader.setMatrix4("projection", glm::value_ptr(projection));
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -131,18 +130,20 @@ int main(int argv, char** argc)
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
-    float xOffset;
-    float yOffset;
 
     while(!w.IsClosed())
     {
+        camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
+        projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
+        shader.setMatrix4("projection", glm::value_ptr(projection));
+
+        float xOffset = 0.0f;
+        float yOffset = 0.0f;
+
         xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
         yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
 
         oldMousePos = Input::getCurrentCursorPos();
-
-        std::cout << xOffset << std::endl;
-        std::cout << yOffset << std::endl;
 
         glm::vec3 camDirection;
         float camSpeedMultiplier = 1.0f;
@@ -236,8 +237,6 @@ int main(int argv, char** argc)
         {
             viewDir += glm::vec3(0.0f, 0.0f, -1.0f);
         }
-
-        std::cout << Time::DeltaTime() << std::endl;
 
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
