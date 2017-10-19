@@ -108,7 +108,7 @@ int main(int argv, char** argc)
     {
         glm::vec3(1.1f, -1.5f, -1.0f),
         glm::vec3(-1.1f, -1.5f, -1.0f),
-        glm::vec3(0.0f, -75.0f, 0.0f)
+        glm::vec3(0.0f, -40.5f, 0.0f)
 
     };
 
@@ -182,6 +182,18 @@ int main(int argv, char** argc)
         if (Input::keyPressed(KeyCode::LEFT_CTRL))
         {
             camSpeedMultiplier = 0.5f;
+        }
+
+        if (Input::keyPressed(KeyCode::U))
+        {
+            positions[2].y += 2.5f * Time::DeltaTime();
+            std::cout << positions[2].x << ", " << positions[2].y << ", " << positions[2].z << std::endl;
+        }
+
+        if (Input::keyPressed(KeyCode::J))
+        {
+            positions[2].y += -(2.5f * Time::DeltaTime());
+            std::cout << positions[2].x << ", " << positions[2].y << ", " << positions[2].z << std::endl;
         }
 
 
