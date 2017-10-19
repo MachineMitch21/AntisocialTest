@@ -131,15 +131,32 @@ int main(int argv, char** argc)
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
+    float xOffset;
+    float yOffset;
+
     while(!w.IsClosed())
     {
-        float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
-        float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+        xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+        yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
 
         oldMousePos = Input::getCurrentCursorPos();
 
+        std::cout << xOffset << std::endl;
+        std::cout << yOffset << std::endl;
+
         glm::vec3 camDirection;
         float camSpeedMultiplier = 1.0f;
+
+
+        if (Input::keyPressed(KeyCode::K_ESCAPE))
+        {
+            break;
+        }
+
+        if (Input::keyDown(KeyCode::C))
+        {
+            w.setCursor(!w.isCursorActive());
+        }
 
         if (Input::keyPressed(KeyCode::W))
         {
@@ -187,10 +204,6 @@ int main(int argv, char** argc)
             std::cout << "Clicked left mouse button" << std::endl;
         }
 
-        if (Input::keyPressed(KeyCode::K_ESCAPE))
-        {
-            break;
-        }
 
         if (Input::keyDown(KeyCode::V))
         {
@@ -223,6 +236,8 @@ int main(int argv, char** argc)
         {
             viewDir += glm::vec3(0.0f, 0.0f, -1.0f);
         }
+
+        std::cout << Time::DeltaTime() << std::endl;
 
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
