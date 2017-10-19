@@ -13,6 +13,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform float verticeOffset = 0.0f;
+
 void main()
 {
     mat4 model_view = model * view;

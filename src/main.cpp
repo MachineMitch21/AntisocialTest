@@ -14,6 +14,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include <vector>
+#include <thread>
 
 using namespace antisocial::input;
 using namespace antisocial::math;
@@ -52,61 +53,29 @@ int main(int argv, char** argc)
 
     Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
-    std::vector<glm::vec3> objVertices;
-    std::vector<glm::vec3> objNormals;
-    std::vector<glm::vec2> objUVs;
+    std::vector<glm::vec3> mutantVertices;
+    std::vector<glm::vec3> mutantNormals;
+    std::vector<glm::vec2> mutantUVs;
 
-    ModelLoader::loadObj("../Data/Models/mutant.obj", objVertices, objNormals, objUVs);
+    ModelLoader::loadObj("../Data/Models/mutant.obj", mutantVertices, mutantNormals, mutantUVs);
+
+    Mesh mutant(mutantVertices, mutantNormals, mutantUVs);
+
+    std::vector<glm::vec3> derrickVertices;
+    std::vector<glm::vec3> derrickNormals;
+    std::vector<glm::vec2> derrickUVs;
+
+    ModelLoader::loadObj("../Data/Models/derrick.obj", derrickVertices, derrickNormals, derrickUVs);
+
+    Mesh derrick(derrickVertices, derrickNormals, derrickUVs);
 
     // print_std_vector("printing vertices", objVertices);
     // print_std_vector("printing normals", objNormals);
     // print_std_vector("printing uvs", objUVs);
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
-    Texture2D diffuse("../Data/Images/Mutant_diffuse.png");
-    Texture2D normal("../Data/Images/PoliceZombie_normal.png");
-
-    std::vector<float> vertices =
-    {
-        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-         1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f,
-        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f,  1.0f, 0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f
-    };
-
-    Mesh objMesh(objVertices, objNormals, objUVs);
+    Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
+    Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
 
     glm::mat4 view;
     glm::mat4 projection;
@@ -125,11 +94,14 @@ int main(int argv, char** argc)
 
     std::vector<glm::vec3> positions =
     {
-        glm::vec3(0.0f, -1.5f, -1.0f)
+        glm::vec3(1.1f, -1.5f, -1.0f),
+        glm::vec3(-1.1f, -1.5f, -1.0f)
+
     };
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
+    float verticeOffset = 0.0f;
 
     while(!w.IsClosed())
     {
@@ -205,6 +177,23 @@ int main(int argv, char** argc)
             std::cout << "Clicked left mouse button" << std::endl;
         }
 
+        if (Input::keyPressed(KeyCode::K_UP))
+        {
+            verticeOffset += .01f;
+            // if (verticeOffset > 1.0f)
+            // {
+            //     verticeOffset = 1.0f;
+            // }
+        }
+
+        if (Input::keyPressed(KeyCode::K_DOWN))
+        {
+            verticeOffset -= .01f;
+            // if (verticeOffset < 0.0f)
+            // {
+            //     verticeOffset = 0.0f;
+            // }
+        }
 
         if (Input::keyDown(KeyCode::V))
         {
@@ -241,7 +230,7 @@ int main(int argv, char** argc)
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
         shader.setMatrix4("view", glm::value_ptr(view));
-
+        shader.setFloat("verticeOffset", verticeOffset);
         shader.setFloat("time", Time::ElapsedTime());
 
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
@@ -255,9 +244,16 @@ int main(int argv, char** argc)
 
             shader.setMatrix4("model", glm::value_ptr(model));
 
-            diffuse.bind(0);
-            normal.bind(1);
-            objMesh.draw();
+            if (i == 0)
+            {
+                mutantDiffuse.bind(0);
+                mutant.draw();
+            }
+            else
+            {
+                derrickDiffuse.bind(0);
+                derrick.draw();
+            }
         }
         w.update();
     }
