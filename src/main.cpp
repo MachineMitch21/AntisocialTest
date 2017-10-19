@@ -7,6 +7,7 @@
 #include <Vector4f.h>
 #include <Mesh.h>
 #include <ModelLoader.h>
+#include <Camera.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,6 +23,7 @@ using antisocial::Texture2D;
 using antisocial::Time;
 using antisocial::Mesh;
 using antisocial::ModelLoader;
+using antisocial::Camera;
 
 void print_std_vector(std::string message, std::vector<glm::vec3> v)
 {
@@ -46,19 +48,23 @@ int main(int argv, char** argc)
     Window w("Hello, Antisocial", 1000, 750);
     Input::updateContext(w.getContext());
 
+    w.setCursor(false);
+
+    Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+
     std::vector<glm::vec3> objVertices;
     std::vector<glm::vec3> objNormals;
     std::vector<glm::vec2> objUVs;
 
-    ModelLoader::loadObj("../Data/Models/cube.obj", objVertices, objNormals, objUVs);
+    ModelLoader::loadObj("../Data/Models/derrick.obj", objVertices, objNormals, objUVs);
 
-    print_std_vector("printing vertices", objVertices);
-    print_std_vector("printing normals", objNormals);
-    print_std_vector("printing uvs", objUVs);
+    // print_std_vector("printing vertices", objVertices);
+    // print_std_vector("printing normals", objNormals);
+    // print_std_vector("printing uvs", objUVs);
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
-    Texture2D bricks("../Data/Images/lightBricks.png");
-    Texture2D scarJ("../Data/Images/scarlettjo.png");
+    Texture2D diffuse("../Data/Images/PoliceZombie_diffuse.png");
+    Texture2D normal("../Data/Images/PoliceZombie_normal.png");
 
     std::vector<float> vertices =
     {
@@ -107,11 +113,11 @@ int main(int argv, char** argc)
 
     GLuint vertexVBO, uvVBO;
 
-    projection = glm::perspective(45.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+    projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 
     shader.bind();
     shader.setInteger("tex", 0);
-    shader.setInteger("tex2", 1);
+    // shader.setInteger("tex2", 1);
     shader.setMatrix4("projection", glm::value_ptr(projection));
 
     bool drawWireframe = false;
@@ -120,14 +126,62 @@ int main(int argv, char** argc)
 
     std::vector<glm::vec3> positions =
     {
-        glm::vec3(-2.0f, 0.0f, -3.0f),
-        glm::vec3(2.0f, 0.0f, -1.5f),
-        glm::vec3(0.0f, 2.0f, -4.5f),
-        glm::vec3(0.0f, -2.0f, -2.5f)
+        glm::vec3(0.0f, -1.5f, -1.0f)
     };
+
+    glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
     while(!w.IsClosed())
     {
+        float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+        float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+
+        oldMousePos = Input::getCurrentCursorPos();
+
+        glm::vec3 camDirection;
+        float camSpeedMultiplier = 1.0f;
+
+        if (Input::keyPressed(KeyCode::W))
+        {
+            camDirection += camera.getFront();
+        }
+
+        if (Input::keyPressed(KeyCode::S))
+        {
+            camDirection += -camera.getFront();
+        }
+
+        if (Input::keyPressed(KeyCode::A))
+        {
+            camDirection += -glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
+        }
+
+        if (Input::keyPressed(KeyCode::D))
+        {
+            camDirection += glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
+        }
+
+        if (Input::keyPressed(KeyCode::Q))
+        {
+            camDirection += -camera.getUp();
+        }
+
+        if (Input::keyPressed(KeyCode::E))
+        {
+            camDirection += camera.getUp();
+        }
+
+        if (Input::keyPressed(KeyCode::LEFT_SHIFT) || Input::keyPressed(KeyCode::RIGHT_SHIFT))
+        {
+            camSpeedMultiplier = 2.5f;
+        }
+
+        if (Input::keyPressed(KeyCode::LEFT_CTRL))
+        {
+            camSpeedMultiplier = 0.5f;
+        }
+
+
         if (Input::mouseButtonDown(MouseButton::M_LEFT))
         {
             std::cout << "Clicked left mouse button" << std::endl;
@@ -170,7 +224,8 @@ int main(int argv, char** argc)
             viewDir += glm::vec3(0.0f, 0.0f, -1.0f);
         }
 
-        view = glm::translate(view, viewDir * Time::DeltaTime() * 2.0f);
+        camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
+		view = camera.getViewMatrix();
         shader.setMatrix4("view", glm::value_ptr(view));
 
         shader.setFloat("time", Time::ElapsedTime());
@@ -182,12 +237,12 @@ int main(int argv, char** argc)
             glm::mat4 model;
 
             model = glm::translate(model, positions[i]);
-            model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+            //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
 
             shader.setMatrix4("model", glm::value_ptr(model));
 
-            bricks.bind(0);
-            scarJ.bind(1);
+            diffuse.bind(0);
+            normal.bind(1);
             objMesh.draw();
         }
         w.update();
