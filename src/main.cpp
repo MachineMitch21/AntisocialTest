@@ -49,7 +49,7 @@ int main(int argv, char** argc)
     Window w("Hello, Antisocial", 1000, 750);
     Input::updateContext(w.getContext());
 
-    w.setCursor(false);
+    w.setCursor(true);
 
     Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
@@ -69,6 +69,14 @@ int main(int argv, char** argc)
 
     Mesh derrick(derrickVertices, derrickNormals, derrickUVs);
 
+    std::vector<glm::vec3> cityVertices;
+    std::vector<glm::vec3> cityNormals;
+    std::vector<glm::vec2> cityUVs;
+
+    ModelLoader::loadObj("../Data/Models/The City.obj", cityVertices, cityNormals, cityUVs);
+
+    Mesh city(cityVertices, cityNormals, cityUVs);
+
     // print_std_vector("printing vertices", objVertices);
     // print_std_vector("printing normals", objNormals);
     // print_std_vector("printing uvs", objUVs);
@@ -76,6 +84,10 @@ int main(int argv, char** argc)
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
+
+    Texture2D city1("../Data/Images/ang1.jpg");
+    Texture2D city2("../Data/Images/cty1.jpg");
+    Texture2D city3("../Data/Images/cty2x.jpg");
 
     glm::mat4 view;
     glm::mat4 projection;
@@ -86,7 +98,8 @@ int main(int argv, char** argc)
 
     shader.bind();
     shader.setInteger("tex", 0);
-    // shader.setInteger("tex2", 1);
+    shader.setInteger("tex2", 1);
+    shader.setInteger("tex3", 2);
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -95,7 +108,8 @@ int main(int argv, char** argc)
     std::vector<glm::vec3> positions =
     {
         glm::vec3(1.1f, -1.5f, -1.0f),
-        glm::vec3(-1.1f, -1.5f, -1.0f)
+        glm::vec3(-1.1f, -1.5f, -1.0f),
+        glm::vec3(0.0f, -75.0f, 0.0f)
 
     };
 
@@ -180,19 +194,19 @@ int main(int argv, char** argc)
         if (Input::keyPressed(KeyCode::K_UP))
         {
             verticeOffset += .01f;
-            // if (verticeOffset > 1.0f)
-            // {
-            //     verticeOffset = 1.0f;
-            // }
+            if (verticeOffset > 1.0f)
+            {
+                verticeOffset = 1.0f;
+            }
         }
 
         if (Input::keyPressed(KeyCode::K_DOWN))
         {
             verticeOffset -= .01f;
-            // if (verticeOffset < 0.0f)
-            // {
-            //     verticeOffset = 0.0f;
-            // }
+            if (verticeOffset < 0.0f)
+            {
+                verticeOffset = 0.0f;
+            }
         }
 
         if (Input::keyDown(KeyCode::V))
@@ -249,10 +263,17 @@ int main(int argv, char** argc)
                 mutantDiffuse.bind(0);
                 mutant.draw();
             }
-            else
+            else if (i == 1)
             {
                 derrickDiffuse.bind(0);
                 derrick.draw();
+            }
+            else if (i == 2)
+            {
+                city1.bind(0);
+                city2.bind(1);
+                city3.bind(2);
+                city.draw();
             }
         }
         w.update();

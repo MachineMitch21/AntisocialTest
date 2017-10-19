@@ -19,7 +19,7 @@ void main()
 {
     mat4 model_view = model * view;
     FragPos = Pos;
-    FragPos += Normal * 0.0f;
+    FragPos += Normal * verticeOffset;
     normal = Normal * mat3(model_view);
     texCoord = TexCoord;
     gl_Position = vec4(FragPos, 1.0f) * model_view * projection;
