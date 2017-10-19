@@ -56,14 +56,14 @@ int main(int argv, char** argc)
     std::vector<glm::vec3> objNormals;
     std::vector<glm::vec2> objUVs;
 
-    ModelLoader::loadObj("../Data/Models/derrick.obj", objVertices, objNormals, objUVs);
+    ModelLoader::loadObj("../Data/Models/mutant.obj", objVertices, objNormals, objUVs);
 
     // print_std_vector("printing vertices", objVertices);
     // print_std_vector("printing normals", objNormals);
     // print_std_vector("printing uvs", objUVs);
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
-    Texture2D diffuse("../Data/Images/PoliceZombie_diffuse.png");
+    Texture2D diffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D normal("../Data/Images/PoliceZombie_normal.png");
 
     std::vector<float> vertices =
