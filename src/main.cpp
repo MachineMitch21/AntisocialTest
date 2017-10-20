@@ -285,9 +285,10 @@ int main(int argv, char** argc)
 
         skyboxShader.bind();
         skyboxShader.setFloat("time", Time::ElapsedTime());
+        skyboxShader.setInteger("cubeTex", 0);
 
         glm::mat4 skyboxModel;
-        skyboxModel = glm::translate(skyboxModel, camera.getPosition());
+        skyboxModel = glm::translate(skyboxModel, glm::vec3(0.0f));
 
         skyboxShader.setMatrix4("view", glm::value_ptr(view));
         skyboxShader.setMatrix4("projection", glm::value_ptr(projection));

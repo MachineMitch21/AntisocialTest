@@ -27,14 +27,14 @@ namespace antisocial
     {
     public:
         Mesh();
-        Mesh(const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& uvs);
+        Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
         ~Mesh();
 
         void draw() override;
 
-        void setVertices(const std::vector<glm::vec3>& newVertices);
-        void setNormals(const std::vector<glm::vec3>& newNormals);
-        void setUVs(const std::vector<glm::vec2>& newUVs);
+        void setVertices(const std::vector<glm::vec3> newVertices);
+        void setNormals(const std::vector<glm::vec3> newNormals);
+        void setUVs(const std::vector<glm::vec2> newUVs);
 
         inline std::vector<glm::vec3>& getVertices()    { return _vertices; }
         inline std::vector<glm::vec3>& getNormals()     { return _normals; }
