@@ -26,7 +26,7 @@ vec3 getSpecularContribution();
 
 void main()
 {
-    vec3 ambient = .25f * vec3(.25f);
+    vec3 ambient = .15f * vec3(.25f);
 
     vec3 diffuse = getDiffuseContribution();
     vec3 specular = getSpecularContribution();
@@ -34,7 +34,6 @@ void main()
     float distance = length(lightPos - FragPos);
     float attenuation = 1.0f / (1.0f + 0.07f * distance + 0.0075f * (distance * distance));
 
-    ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
 
