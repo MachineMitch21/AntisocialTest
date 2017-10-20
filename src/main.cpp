@@ -49,7 +49,9 @@ void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 1000, 750);
+
     Input::updateContext(w.getContext());
+    Input::LookSensitivity = 0.2f;
 
     w.setCursor(true);
 
@@ -79,17 +81,13 @@ int main(int argv, char** argc)
 
     Mesh city(cityVertices, cityNormals, cityUVs);
 
-    // print_std_vector("printing vertices", objVertices);
-    // print_std_vector("printing normals", objNormals);
-    // print_std_vector("printing uvs", objUVs);
-
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
 
-    Texture2D city1("../Data/Images/ang1.jpg");
-    Texture2D city2("../Data/Images/cty1.jpg");
-    Texture2D city3("../Data/Images/cty2x.jpg");
+    Texture2D cityTex1("../Data/Images/ang1.jpg");
+    Texture2D cityTex2("../Data/Images/cty1.jpg");
+    Texture2D cityTex3("../Data/Images/cty2x.jpg");
 
     glm::mat4 view;
     glm::mat4 projection;
@@ -102,6 +100,10 @@ int main(int argv, char** argc)
     shader.setInteger("tex", 0);
     shader.setInteger("tex2", 1);
     shader.setInteger("tex3", 2);
+
+    shader.setVector3("lightPos", 0.0f, 2.0f, 0.0f);
+    shader.setVector3("lightColor", 0.25, 0.25, 0.25);
+    shader.setFloat("specularStrength", .1f);
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -127,6 +129,7 @@ int main(int argv, char** argc)
         camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
         projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
         shader.setMatrix4("projection", glm::value_ptr(projection));
+        shader.setVector3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
         float xOffset = 0.0f;
         float yOffset = 0.0f;
@@ -264,7 +267,7 @@ int main(int argv, char** argc)
         shader.setFloat("verticeOffset", verticeOffset);
         shader.setFloat("time", Time::ElapsedTime());
 
-        w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+        w.clear(0.0f, 0.0f, 0.0f, 1.0f);
 
         for (int i = 0; i < positions.size(); i++)
         {
@@ -274,6 +277,7 @@ int main(int argv, char** argc)
             //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
 
             shader.setMatrix4("model", glm::value_ptr(model));
+            shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
 
             shader.setBool("usingUnit1", false);
             shader.setBool("usingUnit2", false);
@@ -292,11 +296,12 @@ int main(int argv, char** argc)
             {
                 shader.setBool("usingUnit1", true);
                 shader.setBool("usingUnit2", true);
-                city1.bind(0);
-                city2.bind(1);
-                city3.bind(2);
+                cityTex1.bind(0);
+                cityTex2.bind(1);
+                cityTex3.bind(2);
                 city.draw();
             }
+
         }
         w.update();
         nbFrames++;
