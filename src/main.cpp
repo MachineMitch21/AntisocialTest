@@ -8,6 +8,7 @@
 #include <Mesh.h>
 #include <ModelLoader.h>
 #include <Camera.h>
+#include <Skybox.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,15 +16,8 @@
 #include <cmath>
 #include <vector>
 
+using namespace antisocial;
 using namespace antisocial::input;
-using namespace antisocial::math;
-using antisocial::Window;
-using antisocial::Shader;
-using antisocial::Texture2D;
-using antisocial::Time;
-using antisocial::Mesh;
-using antisocial::ModelLoader;
-using antisocial::Camera;
 
 void print_std_vector(std::string message, std::vector<glm::vec3> v)
 {
@@ -57,6 +51,15 @@ int main(int argv, char** argc)
 
     Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
+    std::string skyboxName = "../Data/Images/skybox/cloudtop/cloudtop_";
+
+    Skybox skybox(  skyboxName + std::string("ft.tga"),
+                    skyboxName + std::string("bk.tga"),
+                    skyboxName + std::string("up.tga"),
+                    skyboxName + std::string("dn.tga"),
+                    skyboxName + std::string("rt.tga"),
+                    skyboxName + std::string("lf.tga")  );
+
     std::vector<glm::vec3> mutantVertices;
     std::vector<glm::vec3> mutantNormals;
     std::vector<glm::vec2> mutantUVs;
@@ -85,8 +88,9 @@ int main(int argv, char** argc)
     std::cout << "Derrick has " << derrick.getVertices().size() << std::endl;
     std::cout << "The City has " << city.getVertices().size() << std::endl;
 
-
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
+    Shader skyboxShader("../Data/Shaders/skybox.vert", "../Data/Shaders/skybox.frag");
+
     Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
 
@@ -105,12 +109,11 @@ int main(int argv, char** argc)
     shader.setInteger("tex", 0);
     shader.setInteger("tex2", 1);
     shader.setInteger("tex3", 2);
-
     shader.setVector3("lightPos", 0.0f, 2.0f, 0.0f);
     shader.setVector3("lightColor", 0.25, 0.25, 0.25);
     shader.setFloat("specularStrength", .1f);
-
     shader.setVector3("ambientColor", .25f, .25f, .25f);
+    shader.unbind();
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -135,9 +138,10 @@ int main(int argv, char** argc)
 
     while(!w.IsClosed())
     {
-
         camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
         projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
+
+        shader.bind();
         shader.setMatrix4("projection", glm::value_ptr(projection));
         shader.setVector3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
         shader.setFloat("ambientIntensity", ambientIntensity);
@@ -273,12 +277,28 @@ int main(int argv, char** argc)
 
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
+
         shader.setMatrix4("view", glm::value_ptr(view));
         shader.setFloat("verticeOffset", verticeOffset);
         shader.setFloat("time", Time::ElapsedTime());
+        shader.unbind();
+
+        skyboxShader.bind();
+        skyboxShader.setFloat("time", Time::ElapsedTime());
+
+        glm::mat4 skyboxModel;
+        skyboxModel = glm::translate(skyboxModel, camera.getPosition());
+
+        skyboxShader.setMatrix4("view", glm::value_ptr(view));
+        skyboxShader.setMatrix4("projection", glm::value_ptr(projection));
+        skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
+
+        skybox.draw();
+        skyboxShader.unbind();
 
         w.clear(0.0f, 0.0f, 0.0f, 1.0f);
 
+        shader.bind();
         for (int i = 0; i < positions.size(); i++)
         {
             glm::mat4 model;
@@ -313,6 +333,8 @@ int main(int argv, char** argc)
             }
 
         }
+        shader.unbind();
+
         w.update();
         nbFrames++;
         printFPSandMilliSeconds(nbFrames, lastTimeCount);
