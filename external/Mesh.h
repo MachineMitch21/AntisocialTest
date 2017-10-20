@@ -36,6 +36,10 @@ namespace antisocial
         void setNormals(const std::vector<glm::vec3>& newNormals);
         void setUVs(const std::vector<glm::vec2>& newUVs);
 
+        inline std::vector<glm::vec3>& getVertices()    { return _vertices; }
+        inline std::vector<glm::vec3>& getNormals()     { return _normals; }
+        inline std::vector<glm::vec2>& getUVs()         { return _uvs; }
+
     private:
         void init_vbo_map();
 
