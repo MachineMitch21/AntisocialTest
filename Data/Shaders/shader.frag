@@ -43,7 +43,7 @@ void main()
 
     vec3 result = (ambient + diffuse + specular) * objectColor;
 
-    fragColor = (isWireframe ? vec4(0.0f, 1.0f, 0.0f, 1.0f) : texture(tex, texCoord) * (usingUnit1 ? texture(tex2, texCoord) : vec4(1.0f)) * (usingUnit2 ? texture(tex3, texCoord) : vec4(1.0f)) * vec4(result, 1.0f));
+    fragColor = (isWireframe ? vec4(.25f, .25f, 0.0f, 1.0f) : texture(tex, texCoord) * (usingUnit1 ? texture(tex2, texCoord) : vec4(1.0f)) * (usingUnit2 ? texture(tex3, texCoord) : vec4(1.0f)) * vec4(result, 1.0f));
 }
 
 vec3 getDiffuseContribution()

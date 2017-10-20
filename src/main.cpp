@@ -127,7 +127,7 @@ int main(int argv, char** argc)
     {
         glm::vec3(1.1f, -1.5f, -1.0f),
         glm::vec3(-1.1f, -1.5f, -1.0f),
-        glm::vec3(0.0f, -40.5f, 0.0f)
+        glm::vec3(0.0f, -11.5f, 0.0f)
 
     };
 
@@ -310,6 +310,11 @@ int main(int argv, char** argc)
 
             model = glm::translate(model, positions[i]);
             //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+
+            if (i == 2)
+            {
+                model = glm::scale(model, glm::vec3(0.25f));
+            }
 
             shader.setMatrix4("model", glm::value_ptr(model));
             shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
