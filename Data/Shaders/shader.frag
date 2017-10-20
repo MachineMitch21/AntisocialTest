@@ -18,6 +18,8 @@ uniform vec3 lightColor;
 uniform vec3 viewPos;
 
 uniform float specularStrength;
+uniform float ambientIntensity;
+uniform vec3 ambientColor;
 
 uniform vec3 objectColor;
 
@@ -26,7 +28,7 @@ vec3 getSpecularContribution();
 
 void main()
 {
-    vec3 ambient = .15f * vec3(.25f);
+    vec3 ambient = ambientIntensity * ambientColor;
 
     vec3 diffuse = getDiffuseContribution();
     vec3 specular = getSpecularContribution();
