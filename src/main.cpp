@@ -37,7 +37,6 @@ void print_std_vector(std::string message, std::vector<glm::vec2> v)
     }
 }
 
-
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 
 int main(int argv, char** argc)
@@ -139,6 +138,8 @@ int main(int argv, char** argc)
     int nbFrames = 0;
 
     float ambientIntensity = 0.0f;
+
+    int modelSelection = 0;
 
     while(!w.IsClosed())
     {
@@ -280,6 +281,18 @@ int main(int argv, char** argc)
             viewDir += glm::vec3(0.0f, 0.0f, -1.0f);
         }
 
+        if (Input::keyDown(KeyCode::ZERO))
+        {
+            std::cout << "Pressed zero" << std::endl;
+            modelSelection = 0;
+        }
+
+        if (Input::keyDown(KeyCode::ONE))
+        {
+            std::cout << "Pressed one" << std::endl;
+            modelSelection = 1;
+        }
+
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
 
@@ -310,6 +323,17 @@ int main(int argv, char** argc)
 
             model = glm::translate(model, positions[i]);
             //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+
+            if (i == modelSelection)
+            {
+                glm::vec3 desiredPos = camera.getPosition() + positions[i];
+                desiredPos.x -= 1.0f;
+
+                model = glm::inverse(view);
+
+                model = glm::translate(model, glm::vec3(0.0f, -1.5f, -1.5f));
+                model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            }
 
             if (i == 2)
             {
