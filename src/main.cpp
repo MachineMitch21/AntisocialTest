@@ -4,7 +4,7 @@
 #include <Texture2D.h>
 #include <Input.h>
 #include <Time.h>
-#include <Vector4f.h>
+#include <Vector3f.h>
 #include <Mesh.h>
 #include <ModelLoader.h>
 #include <Camera.h>
@@ -81,6 +81,11 @@ int main(int argv, char** argc)
 
     Mesh city(cityVertices, cityNormals, cityUVs);
 
+    std::cout << "Mutant has " << mutant.getVertices().size() << std::endl;
+    std::cout << "Derrick has " << derrick.getVertices().size() << std::endl;
+    std::cout << "The City has " << city.getVertices().size() << std::endl;
+
+
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
@@ -105,6 +110,8 @@ int main(int argv, char** argc)
     shader.setVector3("lightColor", 0.25, 0.25, 0.25);
     shader.setFloat("specularStrength", .1f);
 
+    shader.setVector3("ambientColor", .25f, .25f, .25f);
+
     bool drawWireframe = false;
     bool drawPoints = false;
     bool setFullScreen = false;
@@ -124,12 +131,16 @@ int main(int argv, char** argc)
     float lastTimeCount = 0.0f;
     int nbFrames = 0;
 
+    float ambientIntensity = 0.0f;
+
     while(!w.IsClosed())
     {
+
         camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
         projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
         shader.setMatrix4("projection", glm::value_ptr(projection));
         shader.setVector3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+        shader.setFloat("ambientIntensity", ambientIntensity);
 
         float xOffset = 0.0f;
         float yOffset = 0.0f;
@@ -141,7 +152,6 @@ int main(int argv, char** argc)
 
         glm::vec3 camDirection;
         float camSpeedMultiplier = 1.0f;
-
 
         if (Input::keyPressed(KeyCode::K_ESCAPE))
         {
@@ -213,19 +223,19 @@ int main(int argv, char** argc)
 
         if (Input::keyPressed(KeyCode::K_UP))
         {
-            verticeOffset += .01f;
-            if (verticeOffset > 1.0f)
+            ambientIntensity += .01f;
+            if (ambientIntensity > 1.0f)
             {
-                verticeOffset = 1.0f;
+                ambientIntensity = 1.0f;
             }
         }
 
         if (Input::keyPressed(KeyCode::K_DOWN))
         {
-            verticeOffset -= .01f;
-            if (verticeOffset < 0.0f)
+            ambientIntensity -= .01f;
+            if (ambientIntensity < 0.0f)
             {
-                verticeOffset = 0.0f;
+                ambientIntensity = 0.0f;
             }
         }
 
@@ -309,7 +319,6 @@ int main(int argv, char** argc)
     }
     return 0;
 }
-
 
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount)
 {
