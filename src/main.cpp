@@ -45,7 +45,7 @@ int main(int argv, char** argc)
     Window w("Hello, Antisocial", 1000, 750);
 
     Input::updateContext(w.getContext());
-    Input::LookSensitivity = 0.2f;
+    Input::LookSensitivity = 0.15f;
 
     w.setCursor(true);
 
@@ -114,6 +114,10 @@ int main(int argv, char** argc)
     shader.setFloat("specularStrength", .1f);
     shader.setVector3("ambientColor", .25f, .25f, .25f);
     shader.unbind();
+
+    skyboxShader.bind();
+    skyboxShader.setInteger("cubeTex", 0);
+    skyboxShader.unbind();
 
     bool drawWireframe = false;
     bool drawPoints = false;
@@ -246,6 +250,7 @@ int main(int argv, char** argc)
         if (Input::keyDown(KeyCode::V))
         {
             drawWireframe = !drawWireframe;
+            shader.setBool("isWireframe", drawWireframe);
             drawPoints = false;
             glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
         }
@@ -285,7 +290,6 @@ int main(int argv, char** argc)
 
         skyboxShader.bind();
         skyboxShader.setFloat("time", Time::ElapsedTime());
-        skyboxShader.setInteger("cubeTex", 0);
 
         glm::mat4 skyboxModel;
         skyboxModel = glm::translate(skyboxModel, glm::vec3(0.0f));
@@ -297,7 +301,7 @@ int main(int argv, char** argc)
         skybox.draw();
         skyboxShader.unbind();
 
-        w.clear(0.0f, 0.0f, 0.0f, 1.0f);
+        w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
         shader.bind();
         for (int i = 0; i < positions.size(); i++)

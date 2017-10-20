@@ -12,6 +12,8 @@ uniform sampler2D tex3;
 uniform bool usingUnit1;
 uniform bool usingUnit2;
 
+uniform bool isWireframe;
+
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 
@@ -41,7 +43,7 @@ void main()
 
     vec3 result = (ambient + diffuse + specular) * objectColor;
 
-    fragColor = texture(tex, texCoord) * (usingUnit1 ? texture(tex2, texCoord) : vec4(1.0f)) * (usingUnit2 ? texture(tex3, texCoord) : vec4(1.0f)) * vec4(result, 1.0f);
+    fragColor = (isWireframe ? vec4(0.0f, 1.0f, 0.0f, 1.0f) : texture(tex, texCoord) * (usingUnit1 ? texture(tex2, texCoord) : vec4(1.0f)) * (usingUnit2 ? texture(tex3, texCoord) : vec4(1.0f)) * vec4(result, 1.0f));
 }
 
 vec3 getDiffuseContribution()
