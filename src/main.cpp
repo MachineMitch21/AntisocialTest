@@ -83,9 +83,18 @@ int main(int argv, char** argc)
 
     Mesh city(cityVertices, cityNormals, cityUVs);
 
+    std::vector<glm::vec3> shuttleVertices;
+    std::vector<glm::vec3> shuttleNormals;
+    std::vector<glm::vec2> shuttleUVs;
+
+    ModelLoader::loadObj("../Data/Models/cube.obj", shuttleVertices, shuttleNormals, shuttleUVs);
+
+    Mesh shuttle(shuttleVertices, shuttleNormals, shuttleUVs);
+
     std::cout << "Mutant has " << mutant.getVertices().size() << std::endl;
     std::cout << "Derrick has " << derrick.getVertices().size() << std::endl;
     std::cout << "The City has " << city.getVertices().size() << std::endl;
+    std::cout << "The shuttle has " << shuttle.getVertices().size() << std::endl;
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Shader skyboxShader("../Data/Shaders/skybox.vert", "../Data/Shaders/skybox.frag");
@@ -125,9 +134,9 @@ int main(int argv, char** argc)
     std::vector<glm::vec3> positions =
     {
         glm::vec3(1.1f, -1.5f, -1.0f),
-        glm::vec3(-1.1f, -1.5f, -1.0f),
-        glm::vec3(0.0f, -11.5f, 0.0f)
-
+        glm::vec3(-1.5f, 0.0f, 0.0f),
+        glm::vec3(0.0f, -40.5f, 0.0f),
+        glm::vec3(0.0f, 15.0f, 0.0f)
     };
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
@@ -140,6 +149,7 @@ int main(int argv, char** argc)
     float ambientIntensity = 0.0f;
 
     int modelSelection = 0;
+
 
     while(!w.IsClosed())
     {
@@ -214,16 +224,27 @@ int main(int argv, char** argc)
 
         if (Input::keyPressed(KeyCode::U))
         {
-            positions[2].y += 2.5f * Time::DeltaTime();
-            std::cout << positions[2].x << ", " << positions[2].y << ", " << positions[2].z << std::endl;
+            positions[0].y += 2.5f * Time::DeltaTime();
+            std::cout << positions[0].x << ", " << positions[0].y << ", " << positions[0].z << std::endl;
         }
 
         if (Input::keyPressed(KeyCode::J))
         {
-            positions[2].y += -(2.5f * Time::DeltaTime());
-            std::cout << positions[2].x << ", " << positions[2].y << ", " << positions[2].z << std::endl;
+            positions[0].y += -(2.5f * Time::DeltaTime());
+            std::cout << positions[0].x << ", " << positions[0].y << ", " << positions[0].z << std::endl;
         }
 
+        if (Input::keyPressed(KeyCode::K))
+        {
+            positions[1].x += 2.5f * Time::DeltaTime();
+            std::cout << positions[1].x << ", " << positions[1].y << ", " << positions[1].z << std::endl;
+        }
+
+        if (Input::keyPressed(KeyCode::H))
+        {
+            positions[1].x += -(2.5f * Time::DeltaTime());
+            std::cout << positions[1].x << ", " << positions[1].y << ", " << positions[1].z << std::endl;
+        }
 
         if (Input::mouseButtonDown(MouseButton::M_LEFT))
         {
@@ -283,14 +304,22 @@ int main(int argv, char** argc)
 
         if (Input::keyDown(KeyCode::ZERO))
         {
-            std::cout << "Pressed zero" << std::endl;
             modelSelection = 0;
         }
 
         if (Input::keyDown(KeyCode::ONE))
         {
-            std::cout << "Pressed one" << std::endl;
             modelSelection = 1;
+        }
+
+        if (Input::keyDown(KeyCode::TWO))
+        {
+            modelSelection = 2;
+        }
+
+        if (Input::keyDown(KeyCode::N))
+        {
+            modelSelection = -1;
         }
 
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
@@ -317,37 +346,33 @@ int main(int argv, char** argc)
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
         shader.bind();
+        shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
+
+        glm::mat4 cityModel;
+        cityModel = glm::translate(cityModel, positions[2]);
+
+        glm::mat4 mutantModel;
+        mutantModel = glm::translate(mutantModel, positions[0]);
+
         for (int i = 0; i < positions.size(); i++)
         {
             glm::mat4 model;
 
-            model = glm::translate(model, positions[i]);
-            //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
-
-            if (i == modelSelection)
+            if (i != 2 || i != 0)
             {
-                glm::vec3 desiredPos = camera.getPosition() + positions[i];
-                desiredPos.x -= 1.0f;
+                model *= mutantModel;
+                model = glm::translate(model, positions[i]);
+                //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
 
-                model = glm::inverse(view);
+                shader.setMatrix4("model", glm::value_ptr(model));
 
-                model = glm::translate(model, glm::vec3(0.0f, -1.5f, -1.5f));
-                model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                shader.setBool("usingUnit1", false);
+                shader.setBool("usingUnit2", false);
             }
-
-            if (i == 2)
-            {
-                model = glm::scale(model, glm::vec3(0.25f));
-            }
-
-            shader.setMatrix4("model", glm::value_ptr(model));
-            shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
-
-            shader.setBool("usingUnit1", false);
-            shader.setBool("usingUnit2", false);
 
             if (i == 0)
             {
+                shader.setMatrix4("model", glm::value_ptr(mutantModel));
                 mutantDiffuse.bind(0);
                 mutant.draw();
             }
@@ -358,6 +383,7 @@ int main(int argv, char** argc)
             }
             else if (i == 2)
             {
+                shader.setMatrix4("model", glm::value_ptr(cityModel));
                 shader.setBool("usingUnit1", true);
                 shader.setBool("usingUnit2", true);
                 cityTex1.bind(0);
@@ -365,13 +391,17 @@ int main(int argv, char** argc)
                 cityTex3.bind(2);
                 city.draw();
             }
-
+            else if (i == 3)
+            {
+                cityTex1.bind(0);
+                shuttle.draw();
+            }
         }
         shader.unbind();
 
         w.update();
         nbFrames++;
-        printFPSandMilliSeconds(nbFrames, lastTimeCount);
+        // printFPSandMilliSeconds(nbFrames, lastTimeCount);
     }
     return 0;
 }
