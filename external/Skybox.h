@@ -7,6 +7,7 @@
 #include "stb_image.h"
 #include "ModelLoader.h"
 #include "Skybox.h"
+#include "Texture2D.h"
 
 #include <GL/glew.h>
 #include <string>
@@ -16,6 +17,7 @@
 using antisocial::Mesh;
 using antisocial::Drawable;
 using antisocial::ModelLoader;
+using antisocial::Texture2D;
 
 #define CUBE_MAP_FRONT   GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 #define CUBE_MAP_BACK    GL_TEXTURE_CUBE_MAP_POSITIVE_Z
@@ -27,6 +29,9 @@ using antisocial::ModelLoader;
 namespace antisocial
 {
 
+    #define CUBE_MAP    GL_TEXTURE_CUBE_MAP
+    #define TEXTURE_2D  GL_TEXTURE_2D
+
     class
     #ifdef __WIN32__
     ANTISOCIAL_API
@@ -35,19 +40,20 @@ namespace antisocial
     {
     public:
         Skybox(std::string front, std::string back, std::string top, std::string bottom, std::string right, std::string left);
+        Skybox(std::string singleTextureSky);
         ~Skybox();
 
         void draw() override;
+
 
     private:
         bool loadSideTexture(GLenum side, std::string file);
 
     private:
-        std::vector<float> _skyboxVertices;
-        GLuint _cubeMapHandle;
-        GLuint _vao;
-        GLuint _vbo;
-        Mesh* _cubeMesh;
+        Mesh*   _cubeMesh;
+        GLuint  _skyboxTexture;
+        GLenum  _textureType;
+        GLuint  _textureUnit;
     };
 
 }

@@ -50,7 +50,7 @@ int main(int argv, char** argc)
 
     Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
-    std::string skyboxName = "../Data/Images/skybox/cloudtop/cloudtop_";
+    std::string skyboxName = "../Data/Images/skybox/stormydays/stormydays_";
 
     Skybox skybox(  skyboxName + std::string("ft.tga"),
                     skyboxName + std::string("bk.tga"),
@@ -58,6 +58,8 @@ int main(int argv, char** argc)
                     skyboxName + std::string("dn.tga"),
                     skyboxName + std::string("rt.tga"),
                     skyboxName + std::string("lf.tga")  );
+
+    Skybox skybox2D("../Data/Images/skybox/skybox_texture.jpg");
 
     Mesh* mutant    = ModelLoader::loadObj("../Data/Models/mutant.obj");
     Mesh* derrick   = ModelLoader::loadObj("../Data/Models/derrick.obj");
@@ -93,6 +95,7 @@ int main(int argv, char** argc)
 
     skyboxShader.bind();
     skyboxShader.setInteger("cubeTex", 0);
+    skyboxShader.setInteger("cubeTex2D", 1);
     skyboxShader.unbind();
 
     bool drawWireframe = false;
@@ -117,7 +120,6 @@ int main(int argv, char** argc)
     float ambientIntensity = .75f;
 
     int modelSelection = 0;
-
 
     while(!w.IsClosed())
     {
@@ -309,8 +311,9 @@ int main(int argv, char** argc)
         skyboxShader.setMatrix4("view", glm::value_ptr(view));
         skyboxShader.setMatrix4("projection", glm::value_ptr(projection));
         skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
+        skyboxShader.setBool("usingCubeMap", false);
 
-        skybox.draw();
+        skybox2D.draw();
         skyboxShader.unbind();
 
         shader.bind();
