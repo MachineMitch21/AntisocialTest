@@ -12,5 +12,5 @@ uniform float time;
 void main()
 {
     texCoord = Pos;
-    gl_Position = (vec4(Pos, 1.0f) * model * view * projection);
+    gl_Position = vec4(Pos, 1.0f) * model * view * projection;
 }

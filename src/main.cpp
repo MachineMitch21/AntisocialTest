@@ -302,7 +302,7 @@ int main(int argv, char** argc)
         skyboxShader.setFloat("time", Time::ElapsedTime());
 
         glm::mat4 skyboxModel;
-        skyboxModel = glm::translate(skyboxModel, glm::vec3(0.0f));
+        skyboxModel = glm::translate(skyboxModel, camera.getPosition());
 
         skyboxShader.setMatrix4("view", glm::value_ptr(view));
         skyboxShader.setMatrix4("projection", glm::value_ptr(projection));

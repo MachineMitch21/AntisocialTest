@@ -29,7 +29,7 @@ namespace antisocial
         Mesh();
         Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
         virtual ~Mesh();
-        
+
         void draw() override;
 
         void setVertices(const std::vector<glm::vec3> newVertices);
