@@ -3,6 +3,7 @@
 #define MODELLOADER_H
 
 #include "AntisocialDLL.h"
+#include "Mesh.h"
 
 #include <vector>
 #include <string>
@@ -10,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
+
+using antisocial::Mesh;
 
 namespace antisocial
 {
@@ -21,10 +24,7 @@ namespace antisocial
     {
     public:
 
-        static bool loadObj(const std::string& path,
-                            std::vector<glm::vec3>& out_vertices,
-                            std::vector<glm::vec3>& out_normals,
-                            std::vector<glm::vec2>& out_uvs);
+        static Mesh* loadObj(const std::string& path);
     private:
         ModelLoader();
         ~ModelLoader();

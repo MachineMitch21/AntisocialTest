@@ -59,42 +59,10 @@ int main(int argv, char** argc)
                     skyboxName + std::string("rt.tga"),
                     skyboxName + std::string("lf.tga")  );
 
-    std::vector<glm::vec3> mutantVertices;
-    std::vector<glm::vec3> mutantNormals;
-    std::vector<glm::vec2> mutantUVs;
-
-    ModelLoader::loadObj("../Data/Models/mutant.obj", mutantVertices, mutantNormals, mutantUVs);
-
-    Mesh mutant(mutantVertices, mutantNormals, mutantUVs);
-
-    std::vector<glm::vec3> derrickVertices;
-    std::vector<glm::vec3> derrickNormals;
-    std::vector<glm::vec2> derrickUVs;
-
-    ModelLoader::loadObj("../Data/Models/derrick.obj", derrickVertices, derrickNormals, derrickUVs);
-
-    Mesh derrick(derrickVertices, derrickNormals, derrickUVs);
-
-    std::vector<glm::vec3> cityVertices;
-    std::vector<glm::vec3> cityNormals;
-    std::vector<glm::vec2> cityUVs;
-
-    ModelLoader::loadObj("../Data/Models/The City.obj", cityVertices, cityNormals, cityUVs);
-
-    Mesh city(cityVertices, cityNormals, cityUVs);
-
-    std::vector<glm::vec3> shuttleVertices;
-    std::vector<glm::vec3> shuttleNormals;
-    std::vector<glm::vec2> shuttleUVs;
-
-    ModelLoader::loadObj("../Data/Models/cube.obj", shuttleVertices, shuttleNormals, shuttleUVs);
-
-    Mesh shuttle(shuttleVertices, shuttleNormals, shuttleUVs);
-
-    std::cout << "Mutant has " << mutant.getVertices().size() << std::endl;
-    std::cout << "Derrick has " << derrick.getVertices().size() << std::endl;
-    std::cout << "The City has " << city.getVertices().size() << std::endl;
-    std::cout << "The shuttle has " << shuttle.getVertices().size() << std::endl;
+    Mesh* mutant    = ModelLoader::loadObj("../Data/Models/mutant.obj");
+    Mesh* derrick   = ModelLoader::loadObj("../Data/Models/derrick.obj");
+    Mesh* city      = ModelLoader::loadObj("../Data/Models/The City.obj");
+    Mesh* cube      = ModelLoader::loadObj("../Data/Models/cube.obj");
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Shader skyboxShader("../Data/Shaders/skybox.vert", "../Data/Shaders/skybox.frag");
@@ -136,7 +104,7 @@ int main(int argv, char** argc)
         glm::vec3(1.1f, -1.5f, -1.0f),
         glm::vec3(-1.5f, 0.0f, 0.0f),
         glm::vec3(0.0f, -40.5f, 0.0f),
-        glm::vec3(0.0f, 15.0f, 0.0f)
+        glm::vec3(0.0f, 5.0f, 0.0f)
     };
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
@@ -353,6 +321,7 @@ int main(int argv, char** argc)
 
         glm::mat4 mutantModel;
         mutantModel = glm::translate(mutantModel, positions[0]);
+        mutantModel = glm::rotate(mutantModel, glm::radians(Time::ElapsedTime() * 20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         for (int i = 0; i < positions.size(); i++)
         {
@@ -374,12 +343,12 @@ int main(int argv, char** argc)
             {
                 shader.setMatrix4("model", glm::value_ptr(mutantModel));
                 mutantDiffuse.bind(0);
-                mutant.draw();
+                mutant->draw();
             }
             else if (i == 1)
             {
                 derrickDiffuse.bind(0);
-                derrick.draw();
+                derrick->draw();
             }
             else if (i == 2)
             {
@@ -389,12 +358,12 @@ int main(int argv, char** argc)
                 cityTex1.bind(0);
                 cityTex2.bind(1);
                 cityTex3.bind(2);
-                city.draw();
+                city->draw();
             }
             else if (i == 3)
             {
                 cityTex1.bind(0);
-                shuttle.draw();
+                cube->draw();
             }
         }
         shader.unbind();
@@ -403,6 +372,12 @@ int main(int argv, char** argc)
         nbFrames++;
         // printFPSandMilliSeconds(nbFrames, lastTimeCount);
     }
+
+    delete mutant;
+    delete derrick;
+    delete city;
+    delete cube;
+    
     return 0;
 }
 
