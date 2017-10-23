@@ -121,6 +121,8 @@ int main(int argv, char** argc)
 
     while(!w.IsClosed())
     {
+        w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+
         camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
         projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 
@@ -310,8 +312,6 @@ int main(int argv, char** argc)
 
         skybox.draw();
         skyboxShader.unbind();
-
-        w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
         shader.bind();
         shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
