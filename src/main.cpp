@@ -88,7 +88,7 @@ int main(int argv, char** argc)
     shader.setVector3("lightPos", 0.0f, 2.0f, 0.0f);
     shader.setVector3("lightColor", 0.25, 0.25, 0.25);
     shader.setFloat("specularStrength", .1f);
-    shader.setVector3("ambientColor", .25f, .25f, .25f);
+    shader.setVector3("ambientColor", 1.0f, 1.0f, 1.0f);
     shader.unbind();
 
     skyboxShader.bind();
@@ -114,7 +114,7 @@ int main(int argv, char** argc)
     float lastTimeCount = 0.0f;
     int nbFrames = 0;
 
-    float ambientIntensity = 0.0f;
+    float ambientIntensity = .75f;
 
     int modelSelection = 0;
 
