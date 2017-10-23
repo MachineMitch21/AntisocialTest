@@ -343,12 +343,16 @@ int main(int argv, char** argc)
             {
                 shader.setMatrix4("model", glm::value_ptr(mutantModel));
                 mutantDiffuse.bind(0);
-                mutant->draw();
+
+                if (mutant)
+                    mutant->draw();
             }
             else if (i == 1)
             {
                 derrickDiffuse.bind(0);
-                derrick->draw();
+
+                if (derrick)
+                    derrick->draw();
             }
             else if (i == 2)
             {
@@ -358,12 +362,16 @@ int main(int argv, char** argc)
                 cityTex1.bind(0);
                 cityTex2.bind(1);
                 cityTex3.bind(2);
-                city->draw();
+
+                if (city)
+                    city->draw();
             }
             else if (i == 3)
             {
                 cityTex1.bind(0);
-                cube->draw();
+
+                if (cube)
+                    cube->draw();
             }
         }
         shader.unbind();
@@ -377,7 +385,7 @@ int main(int argv, char** argc)
     delete derrick;
     delete city;
     delete cube;
-    
+
     return 0;
 }
 

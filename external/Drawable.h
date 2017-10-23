@@ -14,6 +14,7 @@ namespace antisocial
     public:
 
         virtual void draw() = 0;
+        virtual ~Drawable(){};
     };
 }
 

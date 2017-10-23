@@ -28,8 +28,8 @@ namespace antisocial
     public:
         Mesh();
         Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
-        ~Mesh();
-
+        virtual ~Mesh();
+        
         void draw() override;
 
         void setVertices(const std::vector<glm::vec3> newVertices);
@@ -44,6 +44,7 @@ namespace antisocial
         void init_vbo_map();
 
     private:
+
         std::vector<glm::vec3>          _vertices;
         std::vector<glm::vec3>          _normals;
         std::vector<glm::vec2>          _uvs;
