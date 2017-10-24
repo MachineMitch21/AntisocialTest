@@ -98,10 +98,6 @@ int main(int argv, char** argc)
     skyboxShader.setInteger("cubeTex2D", 1);
     skyboxShader.unbind();
 
-    bool drawWireframe = false;
-    bool drawPoints = false;
-    bool setFullScreen = false;
-
     std::vector<glm::vec3> positions =
     {
         glm::vec3(1.1f, -1.5f, -1.0f),
@@ -112,14 +108,15 @@ int main(int argv, char** argc)
 
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
-    float verticeOffset = 0.0f;
-
     float lastTimeCount = 0.0f;
     int nbFrames = 0;
 
     float ambientIntensity = .75f;
 
-    int modelSelection = 0;
+    bool usingCubeMap = false;
+    bool drawWireframe = false;
+    bool drawPoints = false;
+    bool setFullScreen = false;
 
     while(!w.IsClosed())
     {
@@ -147,6 +144,11 @@ int main(int argv, char** argc)
         if (Input::keyPressed(KeyCode::K_ESCAPE))
         {
             break;
+        }
+
+        if (Input::keyDown(KeyCode::X))
+        {
+            usingCubeMap = !usingCubeMap;
         }
 
         if (Input::keyDown(KeyCode::C))
@@ -218,11 +220,6 @@ int main(int argv, char** argc)
             std::cout << positions[1].x << ", " << positions[1].y << ", " << positions[1].z << std::endl;
         }
 
-        if (Input::mouseButtonDown(MouseButton::M_LEFT))
-        {
-            std::cout << "Clicked left mouse button" << std::endl;
-        }
-
         if (Input::keyPressed(KeyCode::K_UP))
         {
             ambientIntensity += .01f;
@@ -262,38 +259,6 @@ int main(int argv, char** argc)
             w.setFullScreen(setFullScreen);
         }
 
-        glm::vec3 viewDir(0.0f);
-
-        if (Input::keyPressed(KeyCode::K_UP))
-        {
-            viewDir += glm::vec3(0.0f, 0.0f, 1.0f);
-        }
-
-        if (Input::keyPressed(KeyCode::K_DOWN))
-        {
-            viewDir += glm::vec3(0.0f, 0.0f, -1.0f);
-        }
-
-        if (Input::keyDown(KeyCode::ZERO))
-        {
-            modelSelection = 0;
-        }
-
-        if (Input::keyDown(KeyCode::ONE))
-        {
-            modelSelection = 1;
-        }
-
-        if (Input::keyDown(KeyCode::TWO))
-        {
-            modelSelection = 2;
-        }
-
-        if (Input::keyDown(KeyCode::N))
-        {
-            modelSelection = -1;
-        }
-
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
 
@@ -302,18 +267,27 @@ int main(int argv, char** argc)
         shader.setFloat("time", Time::ElapsedTime());
         shader.unbind();
 
+
         skyboxShader.bind();
         skyboxShader.setFloat("time", Time::ElapsedTime());
 
         glm::mat4 skyboxModel;
         skyboxModel = glm::translate(skyboxModel, camera.getPosition());
+        skyboxModel = glm::scale(skyboxModel, glm::vec3(500.0f));
 
         skyboxShader.setMatrix4("view", glm::value_ptr(view));
         skyboxShader.setMatrix4("projection", glm::value_ptr(projection));
         skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
-        skyboxShader.setBool("usingCubeMap", false);
+        skyboxShader.setBool("usingCubeMap", usingCubeMap);
 
-        skybox2D.draw();
+        if (usingCubeMap)
+        {
+            skybox.draw();
+        }
+        else
+        {
+            skybox2D.draw();
+        }
         skyboxShader.unbind();
 
         shader.bind();
