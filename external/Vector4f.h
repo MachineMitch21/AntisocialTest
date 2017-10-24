@@ -29,7 +29,9 @@ namespace antisocial
             float operator*(const Vector4f& v);
             Vector4f operator+(const Vector4f& v);
             Vector4f operator-(const Vector4f& v);
-
+            bool operator==(const Vector4f& v);
+            Vector4f& operator+=(const Vector4f& v);
+            
             friend std::ostream& operator<<(std::ostream& os, const Vector4f& v)
             {
                 return os << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";

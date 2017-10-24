@@ -5,6 +5,8 @@
 #include <Input.h>
 #include <Time.h>
 #include <Vector3f.h>
+#include <Matrix.h>
+#include <MathUtils.h>
 #include <Mesh.h>
 #include <ModelLoader.h>
 #include <Camera.h>
@@ -18,6 +20,7 @@
 
 using namespace antisocial;
 using namespace antisocial::input;
+using namespace antisocial::math;
 
 void print_std_vector(std::string message, std::vector<glm::vec3> v)
 {
@@ -42,6 +45,12 @@ void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 int main(int argv, char** argc)
 {
     Window w("Hello, Antisocial", 1000, 750);
+
+    Matrix test(1.0f);
+    test.rotate(Vector3f(1.0f, 0.0f, 0.0f), to_radians(90.0f));
+
+    std::cout << test << std::endl;
+
 
     Input::updateContext(w.getContext());
     Input::LookSensitivity = 0.15f;
