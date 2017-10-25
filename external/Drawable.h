@@ -5,17 +5,20 @@
 
 namespace antisocial
 {
-    class
-    #ifdef __WIN32__
-    ANTISOCIAL_API
-    #endif // __WIN32__
-    Drawable
+    namespace graphics
     {
-    public:
+        class
+        #ifdef __WIN32__
+        ANTISOCIAL_API
+        #endif // __WIN32__
+        Drawable
+        {
+        public:
 
-        virtual void draw() = 0;
-        virtual ~Drawable(){};
-    };
+            virtual void draw() = 0;
+            virtual ~Drawable(){};
+        };
+    }
 }
 
 #endif // DRAWABLE_H

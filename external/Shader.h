@@ -64,7 +64,7 @@ namespace antisocial {
 	private:
 		//Initializes _shaders map
 		void init_shader_map();
-		
+
 		/*
 		Move provided source code into shader and compiles it.
 		returns handle to shader object.

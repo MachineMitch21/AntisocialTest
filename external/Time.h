@@ -7,7 +7,6 @@
 
 namespace antisocial
 {
-
     class
     #ifdef __WIN32__
     ANTISOCIAL_API
@@ -28,7 +27,6 @@ namespace antisocial
 
         static void update_time();
     };
-
 }
 
 #endif // TIME_H

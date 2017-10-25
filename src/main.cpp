@@ -4,9 +4,11 @@
 #include <Texture2D.h>
 #include <Input.h>
 #include <Time.h>
+#include <Vector2f.h>
 #include <Vector3f.h>
 #include <Matrix.h>
 #include <MathUtils.h>
+#include <Sprite.h>
 #include <Mesh.h>
 #include <ModelLoader.h>
 #include <Camera.h>
@@ -21,24 +23,7 @@
 using namespace antisocial;
 using namespace antisocial::input;
 using namespace antisocial::math;
-
-void print_std_vector(std::string message, std::vector<glm::vec3> v)
-{
-    std::cout << message << std::endl;
-    for (int i = 0; i < v.size(); i++)
-    {
-        std::cout << v[i].x << ", " << v[i].y << ", " << v[i].z << std::endl;
-    }
-}
-
-void print_std_vector(std::string message, std::vector<glm::vec2> v)
-{
-    std::cout << message << std::endl;
-    for (int i = 0; i < v.size(); i++)
-    {
-        std::cout << v[i].x << ", " << v[i].y << std::endl;
-    }
-}
+using namespace antisocial::graphics;
 
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 
@@ -75,8 +60,12 @@ int main(int argv, char** argc)
     Mesh* city      = ModelLoader::loadObj("../Data/Models/The City.obj");
     Mesh* cube      = ModelLoader::loadObj("../Data/Models/cube.obj");
 
+    Sprite sprite(0.0f, .25f * w.getHeight(), .1f * w.getWidth(), .1f * w.getHeight());
+    Sprite sprite2(0.0f, .25f * w.getHeight(), .1f * w.getWidth(), .1f * w.getHeight());
+
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Shader skyboxShader("../Data/Shaders/skybox.vert", "../Data/Shaders/skybox.frag");
+    Shader spriteShader("../Data/Shaders/sprite.vert", "../Data/Shaders/sprite.frag");
 
     Texture2D mutantDiffuse("../Data/Images/Mutant_diffuse.png");
     Texture2D derrickDiffuse("../Data/Images/PoliceZombie_diffuse.png");
@@ -87,8 +76,6 @@ int main(int argv, char** argc)
 
     glm::mat4 view;
     glm::mat4 projection;
-
-    GLuint vertexVBO, uvVBO;
 
     projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 
@@ -107,14 +94,6 @@ int main(int argv, char** argc)
     skyboxShader.setInteger("cubeTex2D", 1);
     skyboxShader.unbind();
 
-    std::vector<glm::vec3> positions =
-    {
-        glm::vec3(1.1f, -1.5f, -1.0f),
-        glm::vec3(-1.5f, 0.0f, 0.0f),
-        glm::vec3(0.0f, -40.5f, 0.0f),
-        glm::vec3(0.0f, 5.0f, 0.0f)
-    };
-
     glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
     float lastTimeCount = 0.0f;
@@ -126,6 +105,14 @@ int main(int argv, char** argc)
     bool drawWireframe = false;
     bool drawPoints = false;
     bool setFullScreen = false;
+
+    std::vector<glm::vec3> positions =
+    {
+        glm::vec3(1.1f, -1.5f, -1.0f),
+        glm::vec3(-1.5f, 0.0f, 0.0f),
+        glm::vec3(0.0f, -40.5f, 0.0f),
+        glm::vec3(0.0f, 5.0f, 0.0f)
+    };
 
     while(!w.IsClosed())
     {
@@ -272,10 +259,8 @@ int main(int argv, char** argc)
 		view = camera.getViewMatrix();
 
         shader.setMatrix4("view", glm::value_ptr(view));
-        shader.setFloat("verticeOffset", verticeOffset);
         shader.setFloat("time", Time::ElapsedTime());
         shader.unbind();
-
 
         skyboxShader.bind();
         skyboxShader.setFloat("time", Time::ElapsedTime());
@@ -299,6 +284,31 @@ int main(int argv, char** argc)
         }
         skyboxShader.unbind();
 
+        projection = glm::ortho(0.0f, (float)w.getWidth(), (float)w.getHeight(), 0.0f, -1.0f, 1.0f);
+
+        if (w.isResized())
+        {
+            std::cout << "Window is resizing, sprites are adjusting positions and dimensions" << std::endl;
+            sprite.setPosition(Vector2f(0.0f, .25f * w.getHeight()));
+            sprite.setWidth(.1f * w.getWidth());
+            sprite.setHeight(.1f * w.getHeight());
+
+            sprite2.setPosition(Vector2f(0.0f, .5f * w.getHeight()));
+            sprite2.setWidth(.1f * w.getWidth());
+            sprite2.setHeight(.1f * w.getHeight());
+        }
+
+        spriteShader.bind();
+        spriteShader.setMatrix4("projection", glm::value_ptr(projection));
+
+        spriteShader.setVector4("color", 1.0f, 0.5f, 0.75f, 0.5f);
+        sprite.draw();
+
+        spriteShader.setVector4("color", 0.5f, 1.0f, 0.75f, 0.5f);
+        sprite2.draw();
+        spriteShader.unbind();
+
+
         shader.bind();
         shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
 
@@ -309,7 +319,7 @@ int main(int argv, char** argc)
         mutantModel = glm::translate(mutantModel, positions[0]);
         mutantModel = glm::rotate(mutantModel, glm::radians(Time::ElapsedTime() * 20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        for (int i = 0; i < positions.size(); i++)
+        for (unsigned int i = 0; i < positions.size(); i++)
         {
             glm::mat4 model;
 

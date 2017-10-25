@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <cstring>
 
-using antisocial::Mesh;
+using antisocial::graphics::Mesh;
 
 namespace antisocial
 {

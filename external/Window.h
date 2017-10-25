@@ -12,8 +12,8 @@
 
 using antisocial::Time;
 
-namespace antisocial {
-
+namespace antisocial
+{
 	class
 	#ifdef __WIN32__
 	ANTISOCIAL_API
@@ -46,6 +46,8 @@ namespace antisocial {
 		//Returns the handle to this window context
 		GLFWwindow* getContext() const { return _window; };
 
+		//Returns true if the window has been resized this frame
+		bool isResized();
 		//Returns value of _cursorActive variable
 		bool isCursorActive();
 		//Returns value of _minimized variable
@@ -81,6 +83,8 @@ namespace antisocial {
 		int _height;
 		//Window width
 		int _width;
+		//True if window is resized
+		bool _isResized;
 		//True if cursor is active, false if not
 		bool _cursorActive;
 		//True if window is minimized, false if not
@@ -97,7 +101,6 @@ namespace antisocial {
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	void window_iconify_callback(GLFWwindow* window, int iconified);
 	void error_callback(int error, const char* description);
-
 }
 
 #endif // WINDOW_H

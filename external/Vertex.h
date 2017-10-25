@@ -9,16 +9,19 @@
 
 namespace antisocial
 {
-    struct
-    #ifdef __WIN32__
-    ANTISOCIAL_API
-    #endif // __WIN32__
-    Vertex
+    namespace graphics
     {
-        Vector3f position;
-        Vector3f normal;
-        Vector2f texCoord;
-    };
+        struct
+        #ifdef __WIN32__
+        ANTISOCIAL_API
+        #endif // __WIN32__
+        Vertex
+        {
+            Vector3f position;
+            Vector3f normal;
+            Vector2f texCoord;
+        };
+    }
 }
 
 #endif // VERTEX_H

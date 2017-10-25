@@ -8,49 +8,51 @@
 #include <map>
 #include <glm/glm.hpp>
 
-using antisocial::Drawable;
+using antisocial::graphics::Drawable;
 
 namespace antisocial
 {
-
-    #define NUM_VBOS    3
-
-    #define VERTICES    0
-    #define NORMALS     1
-    #define UVS         2
-
-    class
-    #ifdef __WIN32__
-    ANTISOCIAL_API
-    #endif // __WIN32__
-    Mesh : public Drawable
+    namespace graphics
     {
-    public:
-        Mesh();
-        Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
-        virtual ~Mesh();
+        #define NUM_VBOS    3
 
-        void draw() override;
+        #define VERTICES    0
+        #define NORMALS     1
+        #define UVS         2
 
-        void setVertices(const std::vector<glm::vec3> newVertices);
-        void setNormals(const std::vector<glm::vec3> newNormals);
-        void setUVs(const std::vector<glm::vec2> newUVs);
+        class
+        #ifdef __WIN32__
+        ANTISOCIAL_API
+        #endif // __WIN32__
+        Mesh : public Drawable
+        {
+        public:
+            Mesh();
+            Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
+            virtual ~Mesh();
 
-        inline std::vector<glm::vec3>& getVertices()    { return _vertices; }
-        inline std::vector<glm::vec3>& getNormals()     { return _normals; }
-        inline std::vector<glm::vec2>& getUVs()         { return _uvs; }
+            void draw() override;
 
-    private:
-        void init_vbo_map();
+            void setVertices(const std::vector<glm::vec3> newVertices);
+            void setNormals(const std::vector<glm::vec3> newNormals);
+            void setUVs(const std::vector<glm::vec2> newUVs);
 
-    private:
+            inline std::vector<glm::vec3>& getVertices()    { return _vertices; }
+            inline std::vector<glm::vec3>& getNormals()     { return _normals; }
+            inline std::vector<glm::vec2>& getUVs()         { return _uvs; }
 
-        std::vector<glm::vec3>          _vertices;
-        std::vector<glm::vec3>          _normals;
-        std::vector<glm::vec2>          _uvs;
-        GLuint                          _vao;
-        std::map<unsigned int, GLuint>  _vbos;
-    };
+        private:
+            void init_vbo_map();
+
+        private:
+
+            std::vector<glm::vec3>          _vertices;
+            std::vector<glm::vec3>          _normals;
+            std::vector<glm::vec2>          _uvs;
+            GLuint                          _vao;
+            std::map<unsigned int, GLuint>  _vbos;
+        };
+    }
 }
 
 #endif // MESH_H
