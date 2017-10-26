@@ -284,31 +284,6 @@ int main(int argv, char** argc)
         }
         skyboxShader.unbind();
 
-        projection = glm::ortho(0.0f, (float)w.getWidth(), (float)w.getHeight(), 0.0f, -1.0f, 1.0f);
-
-        if (w.isResized())
-        {
-            std::cout << "Window is resizing, sprites are adjusting positions and dimensions" << std::endl;
-            sprite.setPosition(Vector2f(0.0f, .25f * w.getHeight()));
-            sprite.setWidth(.1f * w.getWidth());
-            sprite.setHeight(.1f * w.getHeight());
-
-            sprite2.setPosition(Vector2f(0.0f, .5f * w.getHeight()));
-            sprite2.setWidth(.1f * w.getWidth());
-            sprite2.setHeight(.1f * w.getHeight());
-        }
-
-        spriteShader.bind();
-        spriteShader.setMatrix4("projection", glm::value_ptr(projection));
-
-        spriteShader.setVector4("color", 1.0f, 0.5f, 0.75f, 0.5f);
-        sprite.draw();
-
-        spriteShader.setVector4("color", 0.5f, 1.0f, 0.75f, 0.5f);
-        sprite2.draw();
-        spriteShader.unbind();
-
-
         shader.bind();
         shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
 
@@ -371,6 +346,30 @@ int main(int argv, char** argc)
             }
         }
         shader.unbind();
+
+        projection = glm::ortho(0.0f, (float)w.getWidth(), (float)w.getHeight(), 0.0f, -1.0f, 1.0f);
+
+        if (w.isResized())
+        {
+            std::cout << "Window is resizing, sprites are adjusting positions and dimensions" << std::endl;
+            sprite.setPosition(Vector2f(0.0f, .25f * w.getHeight()));
+            sprite.setWidth(.1f * w.getWidth());
+            sprite.setHeight(.1f * w.getHeight());
+
+            sprite2.setPosition(Vector2f(0.0f, .5f * w.getHeight()));
+            sprite2.setWidth(.1f * w.getWidth());
+            sprite2.setHeight(.1f * w.getHeight());
+        }
+
+        spriteShader.bind();
+        spriteShader.setMatrix4("projection", glm::value_ptr(projection));
+
+        spriteShader.setVector4("color", 1.0f, 0.5f, 0.75f, 0.5f);
+        sprite.draw();
+
+        spriteShader.setVector4("color", 0.5f, 1.0f, 0.75f, 0.5f);
+        sprite2.draw();
+        spriteShader.unbind();
 
         w.update();
         nbFrames++;
