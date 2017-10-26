@@ -4,10 +4,11 @@
 
 #include "AntisocialDLL.h"
 #include "Mesh.h"
+#include "Vector2f.h"
+#include "Vector3f.h"
 
 #include <vector>
 #include <string>
-#include <glm/glm.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>

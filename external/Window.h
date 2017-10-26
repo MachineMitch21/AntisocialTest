@@ -69,7 +69,6 @@ namespace antisocial
 		//Initializes glfw and sets resizable to true
 		bool init();
 		friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-		friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 		friend void window_iconify_callback(GLFWwindow* window, int iconified);
 		friend void error_callback(int error, const char* description);
 
@@ -83,7 +82,7 @@ namespace antisocial
 		int _height;
 		//Window width
 		int _width;
-		//True if window is resized
+		//True if window is resized this frame
 		bool _isResized;
 		//True if cursor is active, false if not
 		bool _cursorActive;
@@ -98,7 +97,6 @@ namespace antisocial
 	};
 
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	void window_iconify_callback(GLFWwindow* window, int iconified);
 	void error_callback(int error, const char* description);
 }

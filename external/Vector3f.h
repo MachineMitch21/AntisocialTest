@@ -19,6 +19,7 @@ namespace antisocial
         Vector3f
         {
         public:
+            Vector3f();
             Vector3f(float x, float y, float z);
             ~Vector3f();
 

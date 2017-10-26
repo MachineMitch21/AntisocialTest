@@ -93,6 +93,8 @@ int main(int argv, char** argc)
     Texture2D cityTex2("../Data/Images/cty1.jpg");
     Texture2D cityTex3("../Data/Images/cty2x.jpg");
 
+    Texture2D scarJ("../Data/Images/scarlettjo.png");
+
     glm::mat4 view;
     glm::mat4 projection;
 
@@ -113,7 +115,7 @@ int main(int argv, char** argc)
     skyboxShader.setInteger("cubeTex2D", 1);
     skyboxShader.unbind();
 
-    glm::vec2 oldMousePos = Input::getCurrentCursorPos();
+    Vector2f oldMousePos = Input::getCurrentCursorPos();
 
     float lastTimeCount = 0.0f;
     int nbFrames = 0;

@@ -3,12 +3,15 @@
 
 #include "AntisocialDLL.h"
 #include "Drawable.h"
+#include "Vector2f.h"
+#include "Vector3f.h"
 #include <GL/glew.h>
 #include <vector>
 #include <map>
-#include <glm/glm.hpp>
 
 using antisocial::graphics::Drawable;
+using antisocial::math::Vector2f;
+using antisocial::math::Vector3f;
 
 namespace antisocial
 {
@@ -28,27 +31,27 @@ namespace antisocial
         {
         public:
             Mesh();
-            Mesh(const std::vector<glm::vec3> vertices, const std::vector<glm::vec3> normals, const std::vector<glm::vec2> uvs);
+            Mesh(const std::vector<Vector3f> vertices, const std::vector<Vector3f> normals, const std::vector<Vector2f> uvs);
             virtual ~Mesh();
 
             void draw() override;
 
-            void setVertices(const std::vector<glm::vec3> newVertices);
-            void setNormals(const std::vector<glm::vec3> newNormals);
-            void setUVs(const std::vector<glm::vec2> newUVs);
+            void setVertices(const std::vector<Vector3f> newVertices);
+            void setNormals(const std::vector<Vector3f> newNormals);
+            void setUVs(const std::vector<Vector2f> newUVs);
 
-            inline std::vector<glm::vec3>& getVertices()    { return _vertices; }
-            inline std::vector<glm::vec3>& getNormals()     { return _normals; }
-            inline std::vector<glm::vec2>& getUVs()         { return _uvs; }
+            inline std::vector<Vector3f>& getVertices()    { return _vertices; }
+            inline std::vector<Vector3f>& getNormals()     { return _normals; }
+            inline std::vector<Vector2f>& getUVs()         { return _uvs; }
 
         private:
             void init_vbo_map();
 
         private:
 
-            std::vector<glm::vec3>          _vertices;
-            std::vector<glm::vec3>          _normals;
-            std::vector<glm::vec2>          _uvs;
+            std::vector<Vector3f>          _vertices;
+            std::vector<Vector3f>          _normals;
+            std::vector<Vector2f>          _uvs;
             GLuint                          _vao;
             std::map<unsigned int, GLuint>  _vbos;
         };
