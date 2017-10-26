@@ -25,12 +25,27 @@ using namespace antisocial::input;
 using namespace antisocial::math;
 using namespace antisocial::graphics;
 
+Window w("Hello, Antisocial", 1000, 750);
+
+Vector2f sprite1Pos(0.0f, 1.0f * w.getHeight());
+Vector2f sprite2Pos(1.0f * w.getWidth(), 1.0f * w.getHeight());
+Vector2f sprite3Pos(1.0f * w.getWidth(), 0.0f);
+Vector2f sprite4Pos(0.0f, 0.0f);
+
+float sprite1Width = .1f * w.getWidth();
+float sprite1Height = -.1f * w.getHeight();
+float sprite2Width = -.1f * w.getWidth();
+float sprite2Height = -.1f * w.getHeight();
+float sprite3Width = -.1f * w.getWidth();
+float sprite3Height = .1f * w.getHeight();
+float sprite4Width = .1f * w.getWidth();
+float sprite4Height = .1f * w.getHeight();
+
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
+void updateSpriteData(Window& w);
 
 int main(int argv, char** argc)
 {
-    Window w("Hello, Antisocial", 1000, 750);
-
     Matrix test(1.0f);
     test.rotate(Vector3f(1.0f, 0.0f, 0.0f), to_radians(90.0f));
 
@@ -42,7 +57,7 @@ int main(int argv, char** argc)
 
     w.setCursor(true);
 
-    Camera camera(45.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+    Camera camera(45.0f, 0.0f, 0.0f, 0.0f, 16 / 9, 0.1f, 1000.0f);
 
     std::string skyboxName = "../Data/Images/skybox/stormydays/stormydays_";
 
@@ -60,8 +75,12 @@ int main(int argv, char** argc)
     Mesh* city      = ModelLoader::loadObj("../Data/Models/The City.obj");
     Mesh* cube      = ModelLoader::loadObj("../Data/Models/cube.obj");
 
-    Sprite sprite(0.0f, .25f * w.getHeight(), .1f * w.getWidth(), .1f * w.getHeight());
-    Sprite sprite2(0.0f, .25f * w.getHeight(), .1f * w.getWidth(), .1f * w.getHeight());
+
+
+    Sprite sprite1(sprite1Pos, sprite1Width, sprite1Height);
+    Sprite sprite2(sprite2Pos, sprite2Width, sprite2Height);
+    Sprite sprite3(sprite3Pos, sprite3Width, sprite3Height);
+    Sprite sprite4(sprite4Pos, sprite4Width, sprite4Height);
 
     Shader shader("../Data/Shaders/shader.vert", "../Data/Shaders/shader.frag");
     Shader skyboxShader("../Data/Shaders/skybox.vert", "../Data/Shaders/skybox.frag");
@@ -352,23 +371,40 @@ int main(int argv, char** argc)
         if (w.isResized())
         {
             std::cout << "Window is resizing, sprites are adjusting positions and dimensions" << std::endl;
-            sprite.setPosition(Vector2f(0.0f, .25f * w.getHeight()));
-            sprite.setWidth(.1f * w.getWidth());
-            sprite.setHeight(.1f * w.getHeight());
+            updateSpriteData(w);
 
-            sprite2.setPosition(Vector2f(0.0f, .5f * w.getHeight()));
-            sprite2.setWidth(.1f * w.getWidth());
-            sprite2.setHeight(.1f * w.getHeight());
+            sprite1.setPosition(sprite1Pos);
+            sprite1.setWidth(sprite1Width);
+            sprite1.setHeight(sprite1Height);
+
+            sprite2.setPosition(sprite2Pos);
+            sprite2.setWidth(sprite2Width);
+            sprite2.setHeight(sprite2Height);
+
+            sprite3.setPosition(sprite3Pos);
+            sprite3.setWidth(sprite3Width);
+            sprite3.setHeight(sprite3Height);
+
+            sprite4.setPosition(sprite4Pos);
+            sprite4.setWidth(sprite4Width);
+            sprite4.setHeight(sprite4Height);
         }
 
         spriteShader.bind();
         spriteShader.setMatrix4("projection", glm::value_ptr(projection));
 
         spriteShader.setVector4("color", 1.0f, 0.5f, 0.75f, 0.5f);
-        sprite.draw();
+        sprite1.draw();
 
         spriteShader.setVector4("color", 0.5f, 1.0f, 0.75f, 0.5f);
         sprite2.draw();
+
+        spriteShader.setVector4("color", 0.75f, 0.5f, 1.0f, 0.5f);
+        sprite3.draw();
+
+        spriteShader.setVector4("color", 0.5f, 0.25f, 0.75f, 0.5f);
+        sprite4.draw();
+
         spriteShader.unbind();
 
         w.update();
@@ -394,4 +430,21 @@ void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount)
 		nbFrames = 0;
 		lastTimeCount += 1.0f;
 	}
+}
+
+void updateSpriteData(Window& w)
+{
+    sprite1Pos = Vector2f(0.0f, 1.0f * w.getHeight());
+    sprite2Pos = Vector2f(1.0f * w.getWidth(), 1.0f * w.getHeight());
+    sprite3Pos = Vector2f(1.0f * w.getWidth(), 0.0f);
+    sprite4Pos = Vector2f(0.0f, 0.0f);
+
+    sprite1Width = .1f * w.getWidth();
+    sprite1Height = -.1f * w.getHeight();
+    sprite2Width = -.1f * w.getWidth();
+    sprite2Height = -.1f * w.getHeight();
+    sprite3Width = -.1f * w.getWidth();
+    sprite3Height = .1f * w.getHeight();
+    sprite4Width = .1f * w.getWidth();
+    sprite4Height = .1f * w.getHeight();
 }
