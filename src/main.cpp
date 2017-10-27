@@ -45,6 +45,22 @@ float sprite4Height = .1f * w.getHeight();
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 void updateSpriteData(Window& w);
 
+void printGlmMat4(const glm::mat4& m)
+{
+    for (int y = 0; y < 4; y++)
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            std::cout << m[x][y] << " ";
+
+            if (x == 3)
+            {
+                std::cout << std::endl;
+            }
+        }
+    }
+}
+
 int main(int argv, char** argc)
 {
     Vector4f col1(1.0f, 2.0f, 3.0f, 4.0f);
@@ -52,20 +68,15 @@ int main(int argv, char** argc)
     Vector4f col3(1.0f, 2.0f, 3.0f, 4.0f);
     Vector4f col4(1.0f, 2.0f, 3.0f, 4.0f);
 
-    Matrix a(col1, col2, col3, col4);
-    Matrix b(col1, col2, col3, col4);
-    Matrix c(col1, col2, col3, col4);
-
-    a *= b * c;
-
-    std::cout << a << std::endl;
+    Matrix view;
+    Matrix projection;
 
     Input::updateContext(w.getContext());
     Input::LookSensitivity = 0.15f;
 
     w.setCursor(true);
 
-    Camera camera(45.0f, 0.0f, 0.0f, 0.0f, 16 / 9, 0.1f, 1000.0f);
+    Camera camera(60.0f, 0.0f, 0.0f, 0.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
     std::string skyboxName = "../Data/Images/skybox/stormydays/stormydays_";
 
@@ -103,11 +114,6 @@ int main(int argv, char** argc)
 
     Texture2D scarJ("../Data/Images/scarlettjo.png");
 
-    glm::mat4 view;
-    glm::mat4 projection;
-
-    projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
-
     shader.bind();
     shader.setInteger("tex", 0);
     shader.setInteger("tex2", 1);
@@ -135,12 +141,12 @@ int main(int argv, char** argc)
     bool drawPoints = false;
     bool setFullScreen = false;
 
-    std::vector<glm::vec3> positions =
+    std::vector<Vector3f> positions =
     {
-        glm::vec3(1.1f, -1.5f, -1.0f),
-        glm::vec3(-1.5f, 0.0f, 0.0f),
-        glm::vec3(0.0f, -40.5f, 0.0f),
-        glm::vec3(0.0f, 5.0f, 0.0f)
+        Vector3f(1.1f, -1.5f, -1.0f),
+        Vector3f(-1.5f, 0.0f, 0.0f),
+        Vector3f(0.0f, -40.5f, 0.0f),
+        Vector3f(0.0f, 5.0f, 0.0f)
     };
 
     while(!w.IsClosed())
@@ -148,10 +154,10 @@ int main(int argv, char** argc)
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
         camera.setAspectRatio((float)w.getWidth() / (float)w.getHeight());
-        projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
+        projection = Matrix::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 
         shader.bind();
-        shader.setMatrix4("projection", glm::value_ptr(projection));
+        shader.setMatrix4("projection", projection.valueOf());
         shader.setVector3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
         shader.setFloat("ambientIntensity", ambientIntensity);
 
@@ -163,7 +169,7 @@ int main(int argv, char** argc)
 
         oldMousePos = Input::getCurrentCursorPos();
 
-        glm::vec3 camDirection;
+        Vector3f camDirection;
         float camSpeedMultiplier = 1.0f;
 
         if (Input::keyPressed(KeyCode::K_ESCAPE))
@@ -193,12 +199,12 @@ int main(int argv, char** argc)
 
         if (Input::keyPressed(KeyCode::A))
         {
-            camDirection += -glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
+            camDirection += -Vector3f::normalize(Vector3f::cross(camera.getFront(), camera.getUp()));
         }
 
         if (Input::keyPressed(KeyCode::D))
         {
-            camDirection += glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
+            camDirection += Vector3f::normalize(Vector3f::cross(camera.getFront(), camera.getUp()));
         }
 
         if (Input::keyPressed(KeyCode::Q))
@@ -287,20 +293,20 @@ int main(int argv, char** argc)
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);
 		view = camera.getViewMatrix();
 
-        shader.setMatrix4("view", glm::value_ptr(view));
+        shader.setMatrix4("view", view.valueOf());
         shader.setFloat("time", Time::ElapsedTime());
         shader.unbind();
 
         skyboxShader.bind();
         skyboxShader.setFloat("time", Time::ElapsedTime());
 
-        glm::mat4 skyboxModel;
-        skyboxModel = glm::translate(skyboxModel, camera.getPosition());
-        skyboxModel = glm::scale(skyboxModel, glm::vec3(500.0f));
+        Matrix skyboxModel;
+        skyboxModel = Matrix::translate(skyboxModel, camera.getPosition());
+        skyboxModel = Matrix::scale(skyboxModel, Vector3f(100.0f, 100.0f, 100.0f));
 
-        skyboxShader.setMatrix4("view", glm::value_ptr(view));
-        skyboxShader.setMatrix4("projection", glm::value_ptr(projection));
-        skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
+        skyboxShader.setMatrix4("view", view.valueOf());
+        skyboxShader.setMatrix4("projection", projection.valueOf());
+        skyboxShader.setMatrix4("model", skyboxModel.valueOf());
         skyboxShader.setBool("usingCubeMap", usingCubeMap);
 
         if (usingCubeMap)
@@ -316,24 +322,23 @@ int main(int argv, char** argc)
         shader.bind();
         shader.setVector3("objectColor", 1.0f, 1.0f, 1.0f);
 
-        glm::mat4 cityModel;
-        cityModel = glm::translate(cityModel, positions[2]);
+        Matrix cityModel;
+        cityModel = Matrix::translate(cityModel, positions[2]);
 
-        glm::mat4 mutantModel;
-        mutantModel = glm::translate(mutantModel, positions[0]);
-        mutantModel = glm::rotate(mutantModel, glm::radians(Time::ElapsedTime() * 20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        Matrix mutantModel;
+        mutantModel = Matrix::translate(mutantModel, positions[0]);
+        mutantModel = Matrix::rotate(mutantModel, Vector3f(0.0f, 1.0f, 0.0f), MathUtils::to_radians(Time::ElapsedTime() * 10.0f));
 
         for (unsigned int i = 0; i < positions.size(); i++)
         {
-            glm::mat4 model;
+            Matrix model;
 
             if (i != 2 || i != 0)
             {
                 model *= mutantModel;
-                model = glm::translate(model, positions[i]);
-                //model = glm::rotate(model, Time::ElapsedTime(), glm::vec3(0.0f, 1.0f, 1.0f));
+                model = Matrix::translate(model, positions[i]);
 
-                shader.setMatrix4("model", glm::value_ptr(model));
+                shader.setMatrix4("model", model.valueOf());
 
                 shader.setBool("usingUnit1", false);
                 shader.setBool("usingUnit2", false);
@@ -341,7 +346,7 @@ int main(int argv, char** argc)
 
             if (i == 0)
             {
-                shader.setMatrix4("model", glm::value_ptr(mutantModel));
+                shader.setMatrix4("model", mutantModel.valueOf());
                 mutantDiffuse.bind(0);
 
                 if (mutant)
@@ -356,7 +361,7 @@ int main(int argv, char** argc)
             }
             else if (i == 2)
             {
-                shader.setMatrix4("model", glm::value_ptr(cityModel));
+                shader.setMatrix4("model", cityModel.valueOf());
                 shader.setBool("usingUnit1", true);
                 shader.setBool("usingUnit2", true);
                 cityTex1.bind(0);
@@ -376,7 +381,7 @@ int main(int argv, char** argc)
         }
         shader.unbind();
 
-        projection = glm::ortho(0.0f, (float)w.getWidth(), (float)w.getHeight(), 0.0f, -1.0f, 1.0f);
+        projection = Matrix::orthographic(0.0f, (float)w.getWidth(), (float)w.getHeight(), 0.0f, -1.0f, 1.0f);
 
         if (w.isResized())
         {
@@ -401,7 +406,7 @@ int main(int argv, char** argc)
         }
 
         spriteShader.bind();
-        spriteShader.setMatrix4("projection", glm::value_ptr(projection));
+        spriteShader.setMatrix4("projection", projection.valueOf());
 
         spriteShader.setVector4("color", 1.0f, 0.5f, 0.75f, 0.5f);
         sprite1.draw();

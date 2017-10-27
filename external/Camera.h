@@ -4,8 +4,12 @@
 #include "AntisocialDLL.h"
 #include "Input.h"
 #include <math.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "MathUtils.h"
+#include "Vector2f.h"
+#include "Vector3f.h"
+#include "Matrix.h"
+
+using namespace antisocial::math;
 
 namespace antisocial
 {
@@ -25,7 +29,7 @@ namespace antisocial
             Camera(float fov, float x, float y, float z, float aspectRatio, float nearClip, float farClip);
             ~Camera();
 
-            glm::mat4 getViewMatrix();
+            Matrix getViewMatrix();
 
             void setFOV(float fov);
             void setAspectRatio(float aspectRatio);
@@ -37,21 +41,21 @@ namespace antisocial
             float getNearClip();
             float getFarClip();
 
-            inline glm::vec3 getPosition() const { return _position; };
+            inline Vector3f getPosition() const { return _position; };
 
-            inline glm::vec3 getFront() const { return _front; };
-            inline glm::vec3 getUp() const { return _up; };
-            inline glm::vec3 getRight() const { return _right; };
+            inline Vector3f getFront() const { return _front; };
+            inline Vector3f getUp() const { return _up; };
+            inline Vector3f getRight() const { return _right; };
 
-            void move(glm::vec3 direction, float speedMultiplier, float xOffset, float yOffset, float deltaTime, bool constrain);
+            void move(Vector3f direction, float speedMultiplier, float xOffset, float yOffset, float deltaTime, bool constrain);
 
         private:
-            glm::vec3 _position;
-            glm::vec3 _rotation;
-            glm::vec3 _front;
-            glm::vec3 _up;
-            glm::vec3 _right;
-            glm::vec3 _worldUp;
+            Vector3f _position;
+            Vector3f _rotation;
+            Vector3f _front;
+            Vector3f _up;
+            Vector3f _right;
+            Vector3f _worldUp;
 
             float _fov;
             float _aspectRatio;

@@ -23,19 +23,23 @@ namespace antisocial
             Vector3f(float x, float y, float z);
             ~Vector3f();
 
-            float magnitude();
-            float dot(const Vector3f& v);
-            Vector3f cross(const Vector3f& v);
-            Vector3f add(const Vector3f& v);
-            Vector3f subtract(const Vector3f& v);
+            static Vector3f normalize(const Vector3f& v);
+            static Vector3f cross(const Vector3f& v1, const Vector3f& v2);
+            static Vector3f add(const Vector3f& v1, const Vector3f& v2);
+            static Vector3f subtract(const Vector3f& v1, const Vector3f& v2);
+            static float dot(const Vector3f& v1, const Vector3f& v2);
+
+            float magnitude() const;
             Vector3f scale(float scalar);
 
             static Vector3f Lerp(Vector3f v1, Vector3f v2, float t);
 
-            float operator*(const Vector3f& v);
             Vector3f operator*(float scalar);
-            Vector3f operator+(const Vector3f& v);
-            Vector3f operator-(const Vector3f& v);
+            Vector3f& operator+=(const Vector3f& v);
+            Vector3f operator-();
+
+            friend Vector3f operator+ (const Vector3f& v1, const Vector3f& v2);
+            friend Vector3f operator- (const Vector3f& v1, const Vector3f& v2);
 
             friend std::ostream& operator<<(std::ostream& os, const Vector3f& v)
             {
@@ -50,6 +54,9 @@ namespace antisocial
         public:
             float x, y, z;
         };
+
+        Vector3f operator+ (const Vector3f& v1, const Vector3f& v2);
+        Vector3f operator- (const Vector3f& v1, const Vector3f& v2);
     }
 }
 
