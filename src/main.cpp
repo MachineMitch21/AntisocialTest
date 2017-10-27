@@ -6,6 +6,7 @@
 #include <Time.h>
 #include <Vector2f.h>
 #include <Vector3f.h>
+#include <Vector4f.h>
 #include <Matrix.h>
 #include <MathUtils.h>
 #include <Sprite.h>
@@ -46,11 +47,18 @@ void updateSpriteData(Window& w);
 
 int main(int argv, char** argc)
 {
-    Matrix test(1.0f);
-    test.rotate(Vector3f(1.0f, 0.0f, 0.0f), to_radians(90.0f));
+    Vector4f col1(1.0f, 2.0f, 3.0f, 4.0f);
+    Vector4f col2(1.0f, 2.0f, 3.0f, 4.0f);
+    Vector4f col3(1.0f, 2.0f, 3.0f, 4.0f);
+    Vector4f col4(1.0f, 2.0f, 3.0f, 4.0f);
 
-    std::cout << test << std::endl;
+    Matrix a(col1, col2, col3, col4);
+    Matrix b(col1, col2, col3, col4);
+    Matrix c(col1, col2, col3, col4);
 
+    a *= b * c;
+
+    std::cout << a << std::endl;
 
     Input::updateContext(w.getContext());
     Input::LookSensitivity = 0.15f;

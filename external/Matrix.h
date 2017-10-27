@@ -33,11 +33,10 @@ namespace antisocial
             ~Matrix();
 
             // Transformation methods
-            Matrix compose(const Matrix& m2);
-            Matrix compose(const std::vector<Matrix>& m2);
             void translate(const Vector3f& v1);
             void rotate(const Vector3f& v1, float angle);
             void scale(const Vector3f& v1);
+            Matrix& transpose();
 
             //Operator overloads
             Matrix& operator*=(const Matrix& m2);
