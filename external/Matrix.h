@@ -47,9 +47,12 @@ namespace antisocial
             static Matrix scale(Matrix& m, const Vector3f& v1);
             Matrix& transpose();
 
+            Matrix& multiply(const Matrix& m);
+
             //Operator overloads
+            friend Matrix operator*(Matrix m1, const Matrix& m2);
+            Vector4f operator*(const Vector4f& v);
             Matrix& operator*=(const Matrix& m2);
-            Matrix operator*(const Matrix& m2);
             Matrix& operator+=(const Matrix& m2);
             Matrix operator+(const Matrix& m2);
             bool operator==(const Matrix& m2);
@@ -71,6 +74,8 @@ namespace antisocial
         private:
             float _elements[16];
         };
+
+        Matrix operator*(Matrix m1, const Matrix& m2);
     }
 }
 
