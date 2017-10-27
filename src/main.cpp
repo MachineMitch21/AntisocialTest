@@ -15,9 +15,6 @@
 #include <Camera.h>
 #include <Skybox.h>
 #include <iostream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include <vector>
 
@@ -44,24 +41,6 @@ float sprite4Height = .1f * w.getHeight();
 
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount);
 void updateSpriteData(Window& w);
-
-void printMatrices(const std::vector<std::string>& msg, const std::vector<Matrix>& m, const std::vector<glm::mat4>& glm, float& lastTimeCount);
-
-void printGlmMat4(const glm::mat4& m)
-{
-    for (int y = 0; y < 4; y++)
-    {
-        for (int x = 0; x < 4; x++)
-        {
-            std::cout << m[x][y] << " ";
-
-            if (x == 3)
-            {
-                std::cout << std::endl;
-            }
-        }
-    }
-}
 
 int main(int argv, char** argc)
 {
@@ -327,11 +306,6 @@ int main(int argv, char** argc)
         Matrix cityModel(1.0f);
         cityModel = Matrix::translate(cityModel, positions[2]);
 
-
-        glm::mat4 mutantGlm;
-        mutantGlm = glm::translate(mutantGlm, glm::vec3(positions[0].x, positions[0].y, positions[0].z));
-        mutantGlm = glm::rotate(mutantGlm, glm::radians(Time::ElapsedTime() * 10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
         Matrix mutantModel(1.0f);
         mutantModel = Matrix::translate(mutantModel, positions[0]);
         mutantModel = Matrix::rotate(mutantModel, Vector3f(0.0f, 1.0f, 0.0f), MathUtils::to_radians(Time::ElapsedTime() * 10.0f));
@@ -339,17 +313,11 @@ int main(int argv, char** argc)
         for (unsigned int i = 0; i < positions.size(); i++)
         {
             Matrix model(1.0f);
-            glm::mat4 m;
 
             if (i != 2 || i != 0)
             {
                 model *= mutantModel;
                 model = Matrix::translate(model, positions[i]);
-
-                m *= mutantGlm;
-                m = glm::translate(m, glm::vec3(positions[i].x, positions[i].y, positions[i].z));
-
-                printMatrices(std::vector<std::string> { "Mutant\n", "Model\n" }, std::vector<Matrix> { mutantModel, model }, std::vector<glm::mat4> { mutantGlm, m }, lastTimeCount);
 
                 shader.setMatrix4("model", model.valueOf());
 
@@ -458,20 +426,6 @@ void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount)
 		nbFrames = 0;
 		lastTimeCount += 1.0f;
 	}
-}
-
-void printMatrices(const std::vector<std::string>& msg, const std::vector<Matrix>& m, const std::vector<glm::mat4>& glm, float& lastTimeCount)
-{
-    if (Time::ElapsedTime() - lastTimeCount >= 10.0f)
-    {
-        for (unsigned int i = 0; i < m.size(); i++)
-        {
-            std::cout << msg[i] << m[i] << std::endl << std::endl;
-            printGlmMat4(glm[i]);
-        }
-
-        lastTimeCount += 10.0f;
-    }
 }
 
 void updateSpriteData(Window& w)
