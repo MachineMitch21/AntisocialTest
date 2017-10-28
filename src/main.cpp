@@ -130,6 +130,11 @@ int main(int argv, char** argc)
         Vector3f(0.0f, 5.0f, 0.0f)
     };
 
+    MAG_FILTER magFilter = MAG_FILTER::MAG_LINEAR;
+    MIN_FILTER minFilter = MIN_FILTER::MIN_LINEAR;
+
+    bool doLinearFilter = true;
+
     while(!w.IsClosed())
     {
         w.clear(0.1f, 0.1f, 0.1f, 1.0f);
@@ -269,6 +274,29 @@ int main(int argv, char** argc)
         {
             setFullScreen = !setFullScreen;
             w.setFullScreen(setFullScreen);
+        }
+
+        if (Input::keyDown(KeyCode::T))
+        {
+            doLinearFilter = !doLinearFilter;
+
+            if (doLinearFilter)
+            {
+                minFilter = MIN_FILTER::MIN_LINEAR;
+                magFilter = MAG_FILTER::MAG_LINEAR;
+
+                std::cout << "Using linear filtering on mutant texture" << std::endl;
+            }
+            else
+            {
+                minFilter = MIN_FILTER::MIN_NEAREST;
+                magFilter = MAG_FILTER::MAG_NEAREST;
+
+                std::cout << "Using nearest filtering on mutant texture" << std::endl;
+            }
+
+            mutantDiffuse.setMinFilter(minFilter);
+            mutantDiffuse.setMagFilter(magFilter);
         }
 
         camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, Time::DeltaTime(), true);

@@ -16,7 +16,7 @@
 using antisocial::graphics::Mesh;
 using antisocial::graphics::Drawable;
 using antisocial::ModelLoader;
-using antisocial::graphics::Texture2D;
+using namespace antisocial::graphics::texture2D;
 
 
 namespace antisocial
